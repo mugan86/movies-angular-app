@@ -4,9 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { PagesRoutingModule } from './pages-routing.module';
 import { PagesComponent } from './pages.component';
-import { SidebarModule } from '@core/components/sidebar/sidebar.module';
-import { NavbarModule } from '@core/components/navbar/navbar.module';
-
+import { SidebarModule, NavbarModule } from '@core/components';
 
 @NgModule({
   declarations: [

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { SidebarService } from '@core/services/sidebar.service';
-import { TitleService } from '@core/services/title.service';
+import { SidebarService, TitleService } from '@core/services';
 
 @Component({
   selector: 'app-navbar',
