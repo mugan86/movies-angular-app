@@ -1,0 +1,13 @@
+<p>pages works!</p>
+<ul>
+    <li class="nav-item" *ngFor="let item of principalMenu;trackBy:trackById">
+        <a
+          class="nav-link"
+          [routerLink]="item.url"
+          routerLinkActive="router-link-active"
+          >{{ item.label }}</a
+        >
+      </li>
+    
+</ul>
+<router-outlet></router-outlet>
