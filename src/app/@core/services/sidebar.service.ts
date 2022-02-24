@@ -8,10 +8,10 @@ export class SidebarService {
   getPrincipalMenuItems = () => principalMenu;
 
   openMenu = () => {
-    document.getElementById('mySidenav')!.style.width = '250px';
+    document.getElementById('sidebar-menu')!.style.width = '250px';
   };
 
   closeMenu = () => {
-    document.getElementById('mySidenav')!.style.width = '0';
+    document.getElementById('sidebar-menu')!.style.width = '0';
   };
 }

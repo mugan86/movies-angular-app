@@ -1,18 +1,16 @@
-<div class="d-flex" id="wrapper">
- <app-sidebar></app-sidebar>
-  <!-- Page content wrapper-->
-  <div id="page-content-wrapper">
-    <!-- Top navigation-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-        <div class="container-fluid">
-            <button class="btn btn-primary" id="sidebarToggle" (click)="openNav()">Toggle Menu</button>
-            
-        </div>
-    </nav>
-    <!-- Page content-->
-    <div class="container-fluid">
-        <router-outlet></router-outlet>
-    </div>
-</div>
-</div>
+<app-sidebar></app-sidebar>
+<!-- Top navigation-->
 
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="navbar-brand">
+      <button class="btn btn-primary" id="sidebarToggle" (click)="openNav()">
+        <i class="fa-solid fa-bars"></i></button
+      ><span class="h3 ms-4 pt-4">{{ title }}</span>
+    </div>
+  </div>
+</nav>
+<!-- Page content-->
+<div class="container mt-3">
+  <router-outlet></router-outlet>
+</div>

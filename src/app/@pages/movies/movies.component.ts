@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { TitleService } from '@core/services/title.service';
 
 @Component({
   selector: 'app-movies',
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.css']
 })
-export class MoviesComponent implements OnInit {
+export class MoviesComponent {
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private titleService: TitleService) { 
+    this.titleService.change('Películas');
   }
-
 }
