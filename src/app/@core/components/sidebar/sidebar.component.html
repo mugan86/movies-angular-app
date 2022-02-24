@@ -1,0 +1,23 @@
+<!-- Sidebar
+<div class="border-end bg-white" id="sidebar-wrapper">
+  <div class="sidebar-heading border-bottom bg-light">Menu</div>
+  <div class="list-group list-group-flush">
+    <a
+      *ngFor="let item of principalMenu; trackBy: trackById"
+      class="list-group-item list-group-item-action list-group-item-light p-3"
+      [routerLink]="item.url"
+      routerLinkActive="router-link-active"
+      >{{ item.label }}</a
+    >
+  </div>
+</div>-->
+
+
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">Menú&times;</a>
+  <a
+      *ngFor="let item of principalMenu; trackBy: trackById"
+      class="p-3" (click)="navigateTo(item.url)"
+      >{{ item.label }}</a
+    >
+</div>
