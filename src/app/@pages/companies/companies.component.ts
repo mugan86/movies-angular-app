@@ -8,6 +8,6 @@ import { TitleService } from '@core/services/title.service';
 })
 export class CompaniesComponent {
   constructor(private titleService: TitleService) {
-    this.titleService.change('Estudios');
+    this.titleService.change('Compañias');
   }
 }

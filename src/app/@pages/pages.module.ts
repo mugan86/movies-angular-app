@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PagesRoutingModule } from './pages-routing.module';
 import { PagesComponent } from './pages.component';
 import { SidebarModule } from '@core/components/sidebar/sidebar.module';
+import { NavbarModule } from '@core/components/navbar/navbar.module';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { SidebarModule } from '@core/components/sidebar/sidebar.module';
   imports: [
     CommonModule,
     RouterModule,
+    NavbarModule,
     SidebarModule,
     PagesRoutingModule
   ]

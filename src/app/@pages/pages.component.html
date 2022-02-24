@@ -1,15 +1,6 @@
 <app-sidebar></app-sidebar>
 <!-- Top navigation-->
-
-<nav class="navbar navbar-light bg-light">
-  <div class="container-fluid">
-    <div class="navbar-brand">
-      <button class="btn btn-primary" id="sidebarToggle" (click)="openNav()">
-        <i class="fa-solid fa-bars"></i></button
-      ><span class="h3 ms-4 pt-4">{{ title }}</span>
-    </div>
-  </div>
-</nav>
+<app-navbar></app-navbar>
 <!-- Page content-->
 <div class="container mt-3">
   <router-outlet></router-outlet>
