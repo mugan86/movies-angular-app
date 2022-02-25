@@ -2,19 +2,19 @@
     {
         "id": "0_movies",
         "url": "/",
-        "label": "title.movies",
+        "label": "NAVBAR_SIDEBAR.movies",
         "icon": ""
     },
     {
         "id": "1_actors",
         "url": "/actors",
-        "label": "title.actors",
+        "label": "NAVBAR_SIDEBAR.actors",
         "icon": ""
     },
     {
         "id": "2_companies",
         "url": "/companies",
-        "label": "title.companies",
+        "label": "NAVBAR_SIDEBAR.companies",
         "icon": ""
     }
     

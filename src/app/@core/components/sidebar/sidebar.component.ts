@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidebarService } from '@core/services/sidebar.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,7 +14,10 @@ export class SidebarComponent implements OnInit {
     label: string;
     icon: string;
   }> = [];
-  constructor(private sidebarService: SidebarService, private router: Router) {}
+  constructor(private sidebarService: SidebarService, private router: Router,
+    private readonly translate: TranslateService) {
+      this.translate.setDefaultLang('es');
+    }
 
   ngOnInit(): void {
     this.principalMenu = this.sidebarService.getPrincipalMenuItems();

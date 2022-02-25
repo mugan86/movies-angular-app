@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component } from '@angular/core';
 import { TitleService } from '@core/services/title.service';
 import menuItems from '@data/menus/principal.json';
@@ -8,7 +9,8 @@ import menuItems from '@data/menus/principal.json';
 })
 export class MoviesComponent {
 
-  constructor(private titleService: TitleService) { 
+  constructor(private titleService: TitleService, private readonly translate: TranslateService) { 
     this.titleService.change(menuItems[0].label);
+    this.translate.setDefaultLang('es');
   }
 }

@@ -1,4 +1,3 @@
-import { CustomTranslateLoader } from './@core/helpers/i18n';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -7,14 +6,13 @@ import { AppComponent } from './app.component';
 import { PagesModule } from './@pages/pages.module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-function dynamicTransLoaderFactory(http: HttpClient) {
-  return new CustomTranslateLoader(http, 'sidebar_navbar');
+function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/@data/i18n/app/', '.json');
 }
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     PagesModule,
@@ -23,12 +21,13 @@ function dynamicTransLoaderFactory(http: HttpClient) {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: dynamicTransLoaderFactory,
-        deps: [HttpClient]
-      }
-    })
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+      isolate: true,
+    }),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
