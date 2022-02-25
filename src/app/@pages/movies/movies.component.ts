@@ -31,4 +31,6 @@ export class MoviesComponent implements OnInit{
     this.moviesService.loadAll()
     
   }
+
+  trackById = (index: number, movie: any): string => movie.id;
 }
