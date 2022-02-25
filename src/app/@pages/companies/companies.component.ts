@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TitleService } from '@core/services/title.service';
+import menuItems from '@data/menus/principal.json';
 
 @Component({
   selector: 'app-companies',
@@ -8,6 +9,6 @@ import { TitleService } from '@core/services/title.service';
 })
 export class CompaniesComponent {
   constructor(private titleService: TitleService) {
-    this.titleService.change('Compañias');
+    this.titleService.change(menuItems[2].label);
   }
 }

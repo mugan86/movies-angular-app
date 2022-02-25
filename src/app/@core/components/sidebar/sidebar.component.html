@@ -6,6 +6,6 @@
     *ngFor="let item of principalMenu; trackBy: trackById"
     class="p-3"
     (click)="navigateTo(item.url)"
-    >{{ item.label }}</a
+    >{{ item.label  | translate}}</a
   >
 </div>
