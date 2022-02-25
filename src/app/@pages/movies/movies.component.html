@@ -1,2 +1,9 @@
 <p>movies works!</p>
 {{ 'text' | translate }}
+<span *ngIf="(infoLoading | async)"> Cargando {{(infoLoading | async)}}</span>
+{{ movies$ | async | json}}
+<ul>
+    <li *ngFor="let movie of movies$ | async">
+        {{ movie.poster }} {{movie.title}}
+    </li>
+</ul>
