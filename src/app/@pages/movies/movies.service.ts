@@ -23,6 +23,7 @@ export class MoviesService {
     status: -1, message: '', type: '-'
   })
   private movies$ = new BehaviorSubject<IMovie[]>([]);
+  private movie$ = new Subject<IMovie>();
 
   constructor(private http: HttpClient) {}
 
@@ -36,6 +37,10 @@ export class MoviesService {
 
   get movies() {
     return this.movies$.asObservable();
+  }
+
+  get movie() {
+    return this.movie$.asObservable();
   }
 
   getAll() {
@@ -55,8 +60,21 @@ export class MoviesService {
       });
   }
 
-  getItem() {
-    
+  getItem(id: string | number) {
+    const url = `${this.baseUrl}/movies/${id}`;
+
+    const sub$: Subscription = this.http
+      .get<IMovie>(url)
+      .pipe(
+        tap(() => this.loadingData$.next(true)),
+        tap((movie) => this.movie$.next(movie)),
+        tap(() => this.loadingData$.next(false)),
+        catchError(this.handleError)
+      )
+      .subscribe({
+        complete: () => sub$.unsubscribe(),
+        error: () => sub$.unsubscribe(),
+      });
   }
 
   /**
