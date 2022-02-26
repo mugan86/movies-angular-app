@@ -29,7 +29,7 @@ export class MoviesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.moviesService.loadAll();
+    this.moviesService.getAll();
   }
 
   trackById = (__: number, movie: any): string => movie.id;

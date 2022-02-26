@@ -38,7 +38,7 @@ export class MoviesService {
     return this.movies$.asObservable();
   }
 
-  loadAll() {
+  getAll() {
     const url = `${this.baseUrl}/movies`;
 
     const sub$: Subscription = this.http
@@ -53,6 +53,10 @@ export class MoviesService {
         complete: () => sub$.unsubscribe(),
         error: () => sub$.unsubscribe(),
       });
+  }
+
+  getItem() {
+    
   }
 
   /**
