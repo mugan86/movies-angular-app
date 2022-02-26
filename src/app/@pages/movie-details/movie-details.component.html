@@ -1,0 +1,55 @@
+<app-details-content-item *ngIf="loading$ | async"></app-details-content-item>
+<section class="container" *ngIf="(loading$ | async) === false">
+  <div class="row">
+    <div class="col-md-3">
+      <img
+        class="img-fluid"
+        [src]="movie?.poster"
+        [alt]="movie?.title"
+        onerror="this.src='/assets/img/default.webp'"
+      />
+    </div>
+
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-lg text-start">
+          <h3>{{ 'details.rating' | translate }}</h3>
+          <p>{{ movie?.imdbRating }}</p>
+        </div>
+        <div class="col-lg text-end">
+          <h3>{{ 'details.time' | translate }}</h3>
+          <p>{{ movie!!.duration | duration }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg">
+          <h3>{{ 'details.actors' | translate }}</h3>
+          <hr />
+          <p *ngFor="let actor of movie?.actors">
+            {{ actor.first_name }} {{ actor.last_name }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg">
+          <h3>{{ 'details.company' | translate }}</h3>
+          <hr />
+          <p>
+            {{ movie?.company?.name }}
+          </p>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-lg">
+          <h3>{{ 'details.genres' | translate }}</h3>
+          <hr />
+          <small class="text-muted" *ngFor="let genre of movie?.genre"
+            >#{{ genre | lowercase }}
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row -->
+</section>
+<!-- /.container -->

@@ -1,12 +1,13 @@
 import {NavbarModule} from './navbar/navbar.module';
 import {SidebarModule} from './sidebar/sidebar.module';
-import {ContentItemsLoaderModule} from './content-items-loader/content-items-loader.module';
-import {ContentItemLoaderModule} from './content-item-loader/content-item-loader.module';
-
+import {ContentItemsLoaderModule} from './list-loaders/content-items-loader/content-items-loader.module';
+import {ContentItemLoaderModule} from './list-loaders/content-item-loader/content-item-loader.module';
+import {DetailsContentItemModule} from './single-loaders/details-content-item/details-content-item.module';
 
 export {
     NavbarModule,
     SidebarModule,
     ContentItemLoaderModule,
-    ContentItemsLoaderModule
+    ContentItemsLoaderModule,
+    DetailsContentItemModule
 }

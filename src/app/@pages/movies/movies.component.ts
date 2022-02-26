@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit } from '@angular/core';
 import { TitleService } from '@core/services/title.service';
 import menuItems from '@data/menus/principal.json';
-import { IMovie } from './movies.interface';
+import { IMovie } from './movie.interface';
 import { Observable } from 'rxjs/internal/Observable';
 import { MoviesService } from './movies.service';
 @Component({
@@ -29,7 +29,7 @@ export class MoviesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.moviesService.loadAll();
+    this.moviesService.getAll();
   }
 
   trackById = (__: number, movie: any): string => movie.id;
