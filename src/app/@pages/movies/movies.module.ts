@@ -1,3 +1,4 @@
+import { ContentItemsLoaderModule } from '@core/components';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -12,9 +13,7 @@ export function createTranslateLoader(http: HttpClient) {
 }
 
 @NgModule({
-  declarations: [
-    MoviesComponent
-  ],
+  declarations: [MoviesComponent],
   imports: [
     CommonModule,
     MoviesRoutingModule,
@@ -25,7 +24,8 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient],
       },
       isolate: true,
-    })
-  ]
+    }),
+    ContentItemsLoaderModule,
+  ],
 })
-export class MoviesModule { }
+export class MoviesModule {}

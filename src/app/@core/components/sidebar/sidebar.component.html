@@ -1,11 +1,9 @@
-<div id="sidebar-menu" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()"
-    >Menú&times;</a
-  >
+<aside id="sidebar-menu" class="sidenav">
+  <button class="sidebar-menu__close-button" (click)="closeNav()">Menú&times;</button>
   <a
     *ngFor="let item of principalMenu; trackBy: trackById"
     class="p-3"
     (click)="navigateTo(item.url)"
     >{{ item.label  | translate}}</a
   >
-</div>
+</aside>

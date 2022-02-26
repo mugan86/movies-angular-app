@@ -1,2 +1,26 @@
-<p>movies works!</p>
-{{ 'text' | translate }}
+
+<app-content-items-loader [elementsShow]="9" *ngIf="(loading$ | async)"></app-content-items-loader>
+<div class="row" *ngIf="(loading$ | async) === false">
+  <div
+    class="col-sm-4"
+    *ngFor="let movie of movies$ | async; trackBy: trackById"
+  >
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ movie.title }}</h5>
+        <img
+          [src]="movie.poster"
+          class="img-fluid"
+          [alt]="movie.title"
+          style="object-fit: contain;"
+          onerror="this.src='/assets/img/default.webp'"
+        />
+        <p class="card-text">
+          <small class="text-muted" *ngFor="let genre of movie.genre"
+            >#{{ genre | lowercase }}
+          </small>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
