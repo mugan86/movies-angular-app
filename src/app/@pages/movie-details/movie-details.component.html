@@ -1,2 +1,11 @@
 <p>movie-details works!</p>
-<p>{{movie!.duration | duration}}</p>
+<div *ngIf="(loading$ | async) === false">
+    <p>{{movie!!.duration | duration}}</p>
+    {{ movie | json }}
+    <ul>
+        <li *ngFor="let actor of movie!.actors">
+            {{ actor.first_name }}
+        </li>
+    </ul>
+</div>
+

@@ -1,16 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IActor } from '@pages/actors/actor.interface';
 import {
   BehaviorSubject,
   catchError,
   EMPTY,
+  forkJoin,
+  map,
   of,
   Subject,
   Subscription,
+  switchMap,
   tap,
   throwError,
 } from 'rxjs';
-import { IMovie } from './movies.interface';
+import { IMovie } from './movie.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -19,9 +23,15 @@ export class MoviesService {
   private baseUrl = 'http://localhost:3000';
 
   private loadingData$ = new BehaviorSubject<boolean>(true);
-  private errorData$ = new BehaviorSubject<{type: string, status: number, message: string}>({
-    status: -1, message: '', type: '-'
-  })
+  private errorData$ = new BehaviorSubject<{
+    type: string;
+    status: number;
+    message: string;
+  }>({
+    status: -1,
+    message: '',
+    type: '-',
+  });
   private movies$ = new BehaviorSubject<IMovie[]>([]);
   private movie$ = new Subject<IMovie>();
 
@@ -67,6 +77,20 @@ export class MoviesService {
       .get<IMovie>(url)
       .pipe(
         tap(() => this.loadingData$.next(true)),
+        switchMap((movie: IMovie) => {
+          return forkJoin([
+            of(movie),
+            ...movie.actors.map((item) =>
+              this.http.get<IActor>(`${this.baseUrl}/actors/${item}`)
+            ),
+          ]).pipe(
+            map((data: any[]) => {
+              const movie: IMovie = data[0];
+              movie.actors = data.slice(1, data.length);
+              return movie;
+            })
+          );
+        }),
         tap((movie) => this.movie$.next(movie)),
         tap(() => this.loadingData$.next(false)),
         catchError(this.handleError)
@@ -80,7 +104,7 @@ export class MoviesService {
   /**
    * Sistema muy basico de manejo de errores
    */
-  handleError(error: { type: string, status: number, message: string}) {
+  handleError(error: { type: string; status: number; message: string }) {
     console.log(error);
     return throwError(() => EMPTY);
   }

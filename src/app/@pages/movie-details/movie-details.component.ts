@@ -1,4 +1,4 @@
-import { IMovie } from './../movies/movies.interface';
+import { IMovie } from '../movies/movie.interface';
 import { Component } from '@angular/core';
 import { TitleService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';

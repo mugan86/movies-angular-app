@@ -1,3 +1,4 @@
+import { IActor } from './../actors/actor.interface';
 export interface IMovie {
     id: number;
     title: string;
@@ -6,5 +7,5 @@ export interface IMovie {
     year: number;
     duration: number;
     imdbRating: number;
-    actors: number[];
+    actors: IActor[];
 }
