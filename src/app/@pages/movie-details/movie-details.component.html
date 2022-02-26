@@ -1,9 +1,13 @@
-
-<div class="container" *ngIf="(loading$ | async) === false">
-  <!-- Portfolio Item Row -->
+<app-details-content-item *ngIf="loading$ | async"></app-details-content-item>
+<section class="container" *ngIf="(loading$ | async) === false">
   <div class="row">
     <div class="col-md-3">
-      <img class="img-fluid" [src]="movie?.poster" [alt]="movie?.title" />
+      <img
+        class="img-fluid"
+        [src]="movie?.poster"
+        [alt]="movie?.title"
+        onerror="this.src='/assets/img/default.webp'"
+      />
     </div>
 
     <div class="col-md-8">
@@ -35,7 +39,7 @@
           </p>
         </div>
       </div>
-      <div class="row">
+      <div class="row mb-4">
         <div class="col-lg">
           <h3>Géneros</h3>
           <hr />
@@ -47,5 +51,5 @@
     </div>
   </div>
   <!-- /.row -->
-</div>
+</section>
 <!-- /.container -->
