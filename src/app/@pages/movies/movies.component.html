@@ -1,6 +1,6 @@
 
-<app-content-items-loader [elementsShow]="9" *ngIf="infoLoading | async" ></app-content-items-loader>
-<div class="row" *ngIf="(infoLoading | async) === false">
+<app-content-items-loader [elementsShow]="9" *ngIf="(loading$ | async)"></app-content-items-loader>
+<div class="row" *ngIf="(loading$ | async) === false">
   <div
     class="col-sm-4"
     *ngFor="let movie of movies$ | async; trackBy: trackById"
@@ -10,8 +10,9 @@
         <h5 class="card-title">{{ movie.title }}</h5>
         <img
           [src]="movie.poster"
-          class="card-img-bottom img-fluid h-lg-75"
+          class="img-fluid"
           [alt]="movie.title"
+          style="object-fit: contain;"
           onerror="this.src='/assets/img/default.webp'"
         />
         <p class="card-text">

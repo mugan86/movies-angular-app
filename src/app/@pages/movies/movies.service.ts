@@ -4,6 +4,8 @@ import {
   BehaviorSubject,
   catchError,
   EMPTY,
+  of,
+  Subject,
   Subscription,
   tap,
   throwError,
@@ -17,12 +19,19 @@ export class MoviesService {
   private baseUrl = 'http://localhost:3000';
 
   private loadingData$ = new BehaviorSubject<boolean>(true);
+  private errorData$ = new BehaviorSubject<{type: string, status: number, message: string}>({
+    status: -1, message: '', type: '-'
+  })
   private movies$ = new BehaviorSubject<IMovie[]>([]);
 
   constructor(private http: HttpClient) {}
 
   get loadingData() {
     return this.loadingData$.asObservable();
+  }
+
+  get errorData() {
+    return this.errorData$.asObservable();
   }
 
   get movies() {
@@ -49,7 +58,7 @@ export class MoviesService {
   /**
    * Sistema muy basico de manejo de errores
    */
-  handleError(error: Error) {
+  handleError(error: { type: string, status: number, message: string}) {
     console.log(error);
     return throwError(() => EMPTY);
   }

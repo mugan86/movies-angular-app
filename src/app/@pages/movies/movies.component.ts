@@ -10,9 +10,10 @@ import { MoviesService } from './movies.service';
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.css'],
 })
-export class MoviesComponent implements OnInit{
+export class MoviesComponent implements OnInit {
   movies$: Observable<IMovie[]>;
-  infoLoading: Observable<boolean>;
+  loading$: Observable<boolean>;
+  errorData: Observable<{ type: string; status: number; message: string }>;
   constructor(
     private titleService: TitleService,
     private translate: TranslateService,
@@ -23,14 +24,13 @@ export class MoviesComponent implements OnInit{
 
     // Escuchando cambios
     this.movies$ = this.moviesService.movies;
-    this.infoLoading = this.moviesService.loadingData;
+    this.loading$ = this.moviesService.loadingData;
+    this.errorData = this.moviesService.errorData;
   }
 
   ngOnInit(): void {
-    
-    this.moviesService.loadAll()
-    
+    this.moviesService.loadAll();
   }
 
-  trackById = (index: number, movie: any): string => movie.id;
+  trackById = (__: number, movie: any): string => movie.id;
 }
