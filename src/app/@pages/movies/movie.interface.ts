@@ -1,3 +1,4 @@
+import { ICompany } from './../companies/company.interface';
 import { IActor } from './../actors/actor.interface';
 export interface IMovie {
     id: number;
@@ -8,4 +9,5 @@ export interface IMovie {
     duration: number;
     imdbRating: number;
     actors: IActor[];
+    company?: ICompany;
 }

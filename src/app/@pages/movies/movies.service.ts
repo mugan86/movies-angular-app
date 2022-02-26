@@ -1,3 +1,4 @@
+import { ICompany } from './../companies/company.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IActor } from '@pages/actors/actor.interface';
@@ -83,10 +84,17 @@ export class MoviesService {
             ...movie.actors.map((item) =>
               this.http.get<IActor>(`${this.baseUrl}/actors/${item}`)
             ),
+            this.http.get<ICompany>(`${this.baseUrl}/companies`),
           ]).pipe(
             map((data: any[]) => {
+              // console.log(data)
               const movie: IMovie = data[0];
-              movie.actors = data.slice(1, data.length);
+              movie.actors = data.slice(1, data.length - 1);
+              movie.company = data[data.length - 1].filter(
+                (company: ICompany) => {
+                  return company.movies.includes(movie.id);
+                }
+              )[0];
               return movie;
             })
           );
