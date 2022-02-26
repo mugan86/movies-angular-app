@@ -1,5 +1,5 @@
-<span *ngIf="infoLoading | async"> </span>
 
+<app-content-items-loader [elementsShow]="9" *ngIf="infoLoading | async" ></app-content-items-loader>
 <div class="row" *ngIf="(infoLoading | async) === false">
   <div
     class="col-sm-4"
