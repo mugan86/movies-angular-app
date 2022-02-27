@@ -1,6 +1,16 @@
-{{ (loading$ | async) }}
 <app-details-content-item *ngIf="loading$ | async"></app-details-content-item>
 <section class="container" *ngIf="(loading$ | async) === false">
+  <div class="row mb-2">
+    <div class="col-lg"></div>
+    <div class="col-lg-3">
+      <button type="button" class="btn btn-success me-2" (click)="updateItem()">
+        <i class="fa-solid fa-pencil"></i> Editar
+      </button>
+      <button type="button" class="btn btn-danger" (click)="deleteItem()">
+        <i class="fa-solid fa-trash-can"></i> Eliminar
+      </button>
+    </div>
+  </div>
   <div class="row">
     <div class="col-md-3">
       <img
@@ -14,17 +24,17 @@
     <div class="col-md-8">
       <div class="row">
         <div class="col-lg text-start">
-          <h3>{{ 'details.rating' | translate }}</h3>
+          <h3>{{ "details.rating" | translate }}</h3>
           <p>{{ movie?.imdbRating }}</p>
         </div>
         <div class="col-lg text-end">
-          <h3>{{ 'details.time' | translate }}</h3>
-          <p>{{ (movie?.duration || 0) | duration }}</p>
+          <h3>{{ "details.time" | translate }}</h3>
+          <p>{{ movie?.duration || 0 | duration }}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-lg">
-          <h3>{{ 'details.actors' | translate }}</h3>
+          <h3>{{ "details.actors" | translate }}</h3>
           <hr />
           <p *ngFor="let actor of movie?.actors">
             {{ actor.first_name }} {{ actor.last_name }}
@@ -33,7 +43,7 @@
       </div>
       <div class="row">
         <div class="col-lg">
-          <h3>{{ 'details.company' | translate }}</h3>
+          <h3>{{ "details.company" | translate }}</h3>
           <hr />
           <p>
             {{ movie?.company?.name }}
@@ -42,13 +52,23 @@
       </div>
       <div class="row mb-4">
         <div class="col-lg">
-          <h3>{{ 'details.genres' | translate }}</h3>
+          <h3>{{ "details.genres" | translate }}</h3>
           <hr />
-          <app-hashtag [hashtag]="hashtag"
-          *ngFor="let hashtag of movie?.genre; trackBy: trackByElement"></app-hashtag>
+          <app-hashtag
+            [hashtag]="hashtag"
+            *ngFor="let hashtag of movie?.genre; trackBy: trackByElement"
+          ></app-hashtag>
         </div>
       </div>
     </div>
+  </div>
+  <div class="mobile">
+    <button type="button" class="btn btn-success btn-circle btn-xl me-2">
+      <i class="fa-solid fa-pencil"></i>
+    </button>
+    <button type="button" class="btn btn-danger btn-circle btn-xl">
+      <i class="fa-solid fa-trash-can"></i>
+    </button>
   </div>
   <!-- /.row -->
 </section>

@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-movie-details',
   templateUrl: './movie-details.component.html',
-  styleUrls: ['./movie-details.component.css']
+  styleUrls: ['./movie-details.component.css'],
 })
 export class MovieDetailsComponent {
   private readonly unsubscribe$ = new Subject();
@@ -28,17 +28,29 @@ export class MovieDetailsComponent {
     this.translate.setDefaultLang('es');
     this.titleService.change('');
     this.route.paramMap.subscribe((params: ParamMap) => {
-      this.moviesService.getItem(params.get('id') || '');
-    })
-    // Escuchando cambios
-    this.moviesService.movie.pipe(takeUntil(this.unsubscribe$)).subscribe((movie) => {
-      this.titleService.change(movie.title)
-      this.movie = movie;
+      this.moviesService.getItem(Number(params.get('id')));
     });
-    this.loading$ = this.moviesService.loadingData.pipe(takeUntil(this.unsubscribe$));
+    // Escuchando cambios
+    this.moviesService.movie
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((movie) => {
+        this.titleService.change(movie.title);
+        this.movie = movie;
+      });
+    this.loading$ = this.moviesService.loadingData.pipe(
+      takeUntil(this.unsubscribe$)
+    );
   }
 
   trackByElement = (__: number, elementString: any): string => elementString;
+
+  deleteItem() {
+    console.log(this.movie)
+  }
+
+  updateItem() {
+    console.log(this.movie)
+  }
 
   ngOnDestroy(): void {
     console.log('Destroy');

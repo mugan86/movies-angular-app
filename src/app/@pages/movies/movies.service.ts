@@ -75,7 +75,7 @@ export class MoviesService {
       });
   }
 
-  getItem(id: string) {
+  getItem(id: number) {
     const url = `${this.baseUrl}/movies/${id}`;
 
     const sub$: Subscription = this.http
@@ -109,6 +109,10 @@ export class MoviesService {
         complete: () => sub$.unsubscribe(),
         error: () => sub$.unsubscribe(),
       });
+  }
+
+  delete(id: string) {
+
   }
 
   reset = () => {
