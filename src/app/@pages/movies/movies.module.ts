@@ -5,12 +5,13 @@ import { CommonModule } from '@angular/common';
 
 import { MoviesRoutingModule } from './movies-routing.module';
 import { MoviesComponent } from './movies.component';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { CustomTranslateLoader } from '@core/helpers/i18n';
+import { FEATURE_DIRECTORIES_I18N } from '@core/constants/i18n';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/@data/i18n/movies/', '.json');
+const createTranslateLoader = (http: HttpClient) => {
+  return new CustomTranslateLoader(http, FEATURE_DIRECTORIES_I18N.movies)
 }
 
 @NgModule({
