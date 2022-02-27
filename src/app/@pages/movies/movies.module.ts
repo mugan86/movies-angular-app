@@ -1,3 +1,4 @@
+import { BasicInfoCardModule } from '@shared/components/basic-info-card/basic-info-card.module';
 import { ContentItemsLoaderModule } from '@core/components';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -26,6 +27,7 @@ export function createTranslateLoader(http: HttpClient) {
       isolate: true,
     }),
     ContentItemsLoaderModule,
+    BasicInfoCardModule,
   ],
 })
 export class MoviesModule {}

@@ -71,7 +71,7 @@ export class MoviesService {
       });
   }
 
-  getItem(id: string | number) {
+  getItem(id: string) {
     const url = `${this.baseUrl}/movies/${id}`;
 
     const sub$: Subscription = this.http
@@ -107,6 +107,12 @@ export class MoviesService {
         complete: () => sub$.unsubscribe(),
         error: () => sub$.unsubscribe(),
       });
+  }
+
+  reset = () => {
+    this.loadingData$.next(true);
+    this.movies$.next([]);
+    this.movie$ = new Subject<IMovie>();
   }
 
   /**

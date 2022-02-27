@@ -1,5 +1,5 @@
-import { ICompany } from './../companies/company.interface';
-import { IActor } from './../actors/actor.interface';
+import { ICompany } from '@pages/companies/company.interface';
+import { IActor } from '@pages/actors/actor.interface';
 export interface IMovie {
     id: number;
     title: string;
