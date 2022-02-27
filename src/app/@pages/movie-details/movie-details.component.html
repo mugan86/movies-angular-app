@@ -1,3 +1,4 @@
+{{ (loading$ | async) }}
 <app-details-content-item *ngIf="loading$ | async"></app-details-content-item>
 <section class="container" *ngIf="(loading$ | async) === false">
   <div class="row">
@@ -18,7 +19,7 @@
         </div>
         <div class="col-lg text-end">
           <h3>{{ 'details.time' | translate }}</h3>
-          <p>{{ movie!!.duration | duration }}</p>
+          <p>{{ (movie?.duration || 0) | duration }}</p>
         </div>
       </div>
       <div class="row">
@@ -43,9 +44,8 @@
         <div class="col-lg">
           <h3>{{ 'details.genres' | translate }}</h3>
           <hr />
-          <small class="text-muted" *ngFor="let genre of movie?.genre"
-            >#{{ genre | lowercase }}
-          </small>
+          <app-hashtag [hashtag]="hashtag"
+          *ngFor="let hashtag of movie?.genre; trackBy: trackByElement"></app-hashtag>
         </div>
       </div>
     </div>

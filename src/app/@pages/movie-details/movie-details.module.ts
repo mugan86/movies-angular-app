@@ -1,3 +1,4 @@
+import { HashtagModule } from '@shared/components/hashtag/hashtag.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -22,6 +23,6 @@ export function createTranslateLoader(http: HttpClient) {
       deps: [HttpClient],
     },
     isolate: true,
-  }), DetailsContentItemModule],
+  }), DetailsContentItemModule, HashtagModule],
 })
 export class MovieDetailsModule {}

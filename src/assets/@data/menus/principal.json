@@ -1,21 +1,20 @@
 [
-    {
-        "id": "0_movies",
-        "url": "/",
-        "label": "NAVBAR_SIDEBAR.movies",
-        "icon": ""
-    },
-    {
-        "id": "1_actors",
-        "url": "/actors",
-        "label": "NAVBAR_SIDEBAR.actors",
-        "icon": ""
-    },
-    {
-        "id": "2_companies",
-        "url": "/companies",
-        "label": "NAVBAR_SIDEBAR.companies",
-        "icon": ""
-    }
-    
+  {
+    "id": "0_movies",
+    "url": "/",
+    "label": "NAVBAR_SIDEBAR.movies",
+    "icon": ""
+  },
+  {
+    "id": "1_actors",
+    "url": "/actors",
+    "label": "NAVBAR_SIDEBAR.actors",
+    "icon": ""
+  },
+  {
+    "id": "2_companies",
+    "url": "/companies",
+    "label": "NAVBAR_SIDEBAR.companies",
+    "icon": ""
+  }
 ]
