@@ -5,6 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { MoviesService } from '../movies/movies.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-movie-details',
@@ -12,6 +14,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
   styleUrls: ['./movie-details.component.css']
 })
 export class MovieDetailsComponent {
+  private readonly unsubscribe$ = new Subject();
   id: string = '';
   movie?: IMovie;
   loading$: Observable<boolean>;
@@ -28,10 +31,19 @@ export class MovieDetailsComponent {
       this.moviesService.getItem(params.get('id') || '');
     })
     // Escuchando cambios
-    this.moviesService.movie.subscribe((movie) => {
+    this.moviesService.movie.pipe(takeUntil(this.unsubscribe$)).subscribe((movie) => {
       this.titleService.change(movie.title)
       this.movie = movie;
     });
-    this.loading$ = this.moviesService.loadingData;
+    this.loading$ = this.moviesService.loadingData.pipe(takeUntil(this.unsubscribe$));
+  }
+
+  trackByElement = (__: number, elementString: any): string => elementString;
+
+  ngOnDestroy(): void {
+    console.log('Destroy');
+    this.moviesService.reset();
+    this.unsubscribe$.next(true);
+    this.unsubscribe$.complete();
   }
 }

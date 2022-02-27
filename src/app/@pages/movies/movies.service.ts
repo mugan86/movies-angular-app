@@ -16,12 +16,15 @@ import {
   throwError,
 } from 'rxjs';
 import { IMovie } from './movie.interface';
+import { BASE_URL } from '@core/constants/api';
+import { ActorService } from '@pages/actors/actor.service';
+import { CompaniesService } from '@pages/companies/companies.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MoviesService {
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = BASE_URL;
 
   private loadingData$ = new BehaviorSubject<boolean>(true);
   private errorData$ = new BehaviorSubject<{
@@ -36,7 +39,8 @@ export class MoviesService {
   private movies$ = new BehaviorSubject<IMovie[]>([]);
   private movie$ = new Subject<IMovie>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private actorsService: ActorService,
+    private companiesService: CompaniesService) {}
 
   get loadingData() {
     return this.loadingData$.asObservable();
@@ -71,7 +75,7 @@ export class MoviesService {
       });
   }
 
-  getItem(id: string | number) {
+  getItem(id: string) {
     const url = `${this.baseUrl}/movies/${id}`;
 
     const sub$: Subscription = this.http
@@ -81,10 +85,8 @@ export class MoviesService {
         switchMap((movie: IMovie) => {
           return forkJoin([
             of(movie),
-            ...movie.actors.map((item) =>
-              this.http.get<IActor>(`${this.baseUrl}/actors/${item}`)
-            ),
-            this.http.get<ICompany>(`${this.baseUrl}/companies`),
+            ...movie.actors.map((item) => this.actorsService.item(item)),
+            this.companiesService.list(),
           ]).pipe(
             map((data: any[]) => {
               // console.log(data)
@@ -108,6 +110,12 @@ export class MoviesService {
         error: () => sub$.unsubscribe(),
       });
   }
+
+  reset = () => {
+    this.loadingData$.next(true);
+    this.movies$.next([]);
+    this.movie$ = new Subject<IMovie>();
+  };
 
   /**
    * Sistema muy basico de manejo de errores

@@ -10,11 +10,11 @@ import {
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpErrorInterceptorService } from '@core/services';
+import { CustomTranslateLoader } from '@core/helpers/i18n';
 
-function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/@data/i18n/app/', '.json');
+const createTranslateLoader = (http: HttpClient) => {
+  return new CustomTranslateLoader(http, 'app')
 }
 @NgModule({
   declarations: [AppComponent],
