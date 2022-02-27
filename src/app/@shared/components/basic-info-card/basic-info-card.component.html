@@ -1,0 +1,18 @@
+<div class="card shadow border-0 mb-4 h-80" (click)="goToDetails(info.url)">
+  <div class="card-body">
+    <h5 class="card-title">{{ info.title }}</h5>
+    <img
+      [src]="info.img"
+      class="img-fluid"
+      [alt]="info.title"
+      style="object-fit: contain"
+      onerror="this.src='/assets/img/default.webp'"
+    />
+    <p class="card-text">
+      <app-hashtag
+        [hashtag]="hashtag"
+        *ngFor="let hashtag of info.hashtags; trackBy: trackByElement"
+      ></app-hashtag>
+    </p>
+  </div>
+</div>
