@@ -46,6 +46,7 @@ export class MovieDetailsComponent {
 
   deleteItem() {
     console.log(this.movie)
+    this.moviesService.delete(this.movie!.id)
   }
 
   updateItem() {
