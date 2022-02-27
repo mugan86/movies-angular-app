@@ -18,6 +18,7 @@ import {
 import { IMovie } from './movie.interface';
 import { BASE_URL } from '@core/constants/api';
 import { ActorService } from '@pages/actors/actor.service';
+import { CompaniesService } from '@pages/companies/companies.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +39,8 @@ export class MoviesService {
   private movies$ = new BehaviorSubject<IMovie[]>([]);
   private movie$ = new Subject<IMovie>();
 
-  constructor(private http: HttpClient, private actorsService: ActorService) {}
+  constructor(private http: HttpClient, private actorsService: ActorService,
+    private companiesService: CompaniesService) {}
 
   get loadingData() {
     return this.loadingData$.asObservable();
@@ -84,7 +86,7 @@ export class MoviesService {
           return forkJoin([
             of(movie),
             ...movie.actors.map((item) => this.actorsService.item(item)),
-            this.http.get<ICompany>(`${this.baseUrl}/companies`),
+            this.companiesService.list(),
           ]).pipe(
             map((data: any[]) => {
               // console.log(data)
