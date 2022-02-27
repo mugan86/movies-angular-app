@@ -1,7 +1,6 @@
-import { ICompany } from './../companies/company.interface';
+import { ICompany } from '@pages/companies/company.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IActor } from '@pages/actors/actor.interface';
 import {
   BehaviorSubject,
   catchError,
@@ -19,6 +18,7 @@ import { IMovie } from './movie.interface';
 import { BASE_URL } from '@core/constants/api';
 import { ActorService } from '@pages/actors/actor.service';
 import { CompaniesService } from '@pages/companies/companies.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -39,8 +39,11 @@ export class MoviesService {
   private movies$ = new BehaviorSubject<IMovie[]>([]);
   private movie$ = new Subject<IMovie>();
 
-  constructor(private http: HttpClient, private actorsService: ActorService,
-    private companiesService: CompaniesService) {}
+  constructor(
+    private http: HttpClient,
+    private actorsService: ActorService,
+    private companiesService: CompaniesService
+  ) {}
 
   get loadingData() {
     return this.loadingData$.asObservable();
@@ -67,7 +70,7 @@ export class MoviesService {
         tap(() => this.loadingData$.next(true)),
         tap((movies) => this.movies$.next(movies)),
         tap(() => this.loadingData$.next(false)),
-        catchError(this.handleError)
+        catchError(catchError((error) => of(error)))
       )
       .subscribe({
         complete: () => sub$.unsubscribe(),
@@ -75,7 +78,7 @@ export class MoviesService {
       });
   }
 
-  getItem(id: string) {
+  getItem(id: number) {
     const url = `${this.baseUrl}/movies/${id}`;
 
     const sub$: Subscription = this.http
@@ -103,12 +106,20 @@ export class MoviesService {
         }),
         tap((movie) => this.movie$.next(movie)),
         tap(() => this.loadingData$.next(false)),
-        catchError(this.handleError)
+        catchError((error) => of(error))
       )
       .subscribe({
         complete: () => sub$.unsubscribe(),
         error: () => sub$.unsubscribe(),
       });
+  }
+
+  delete(id: number) {
+    const url = `${this.baseUrl}/movies/${id}`;
+
+    return this.http.delete<IMovie[]>(url).pipe(
+      catchError((error) => of(error))
+    );
   }
 
   reset = () => {
