@@ -4,9 +4,12 @@ import { TitleService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { MoviesService } from '../movies/movies.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs';
+import { AlertService } from '@shared/services/alert.service';
+import Swal from 'sweetalert2';
+import { TypeAlertEnum } from '@core/constants/alerts';
 
 @Component({
   selector: 'app-movie-details',
@@ -22,7 +25,9 @@ export class MovieDetailsComponent {
     private titleService: TitleService,
     private translate: TranslateService,
     private moviesService: MoviesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private alertService: AlertService,
+    private router: Router
   ) {
     // this.titleService.change(menuItems[0].label);
     this.translate.setDefaultLang('es');
@@ -44,13 +49,47 @@ export class MovieDetailsComponent {
 
   trackByElement = (__: number, elementString: any): string => elementString;
 
-  deleteItem() {
-    console.log(this.movie)
-    this.moviesService.delete(this.movie!.id)
+  async deleteItem() {
+    await this.alertService.dialogConfirmCancel(
+      'ALERTS.deleteTitle',
+      'ALERTS.deleteContent',
+      TypeAlertEnum.WARNING
+    ).then((result) => {
+      if (result.isConfirmed) {
+        this.moviesService.delete(this.movie!.id).subscribe((data) => {
+          if (data.status === undefined) {
+            this.alertService.dialogConfirm(
+              'Eliminado',
+              'Selección eliminada correctamente',
+              TypeAlertEnum.SUCCESS
+            ).then(() => this.navigateTo('/movies'));
+          } else {
+            this.alertService.dialogConfirm(
+              'No eliminado',
+              'Debido a un problema no se ha eliminado',
+              TypeAlertEnum.WARNING
+            )
+          }
+        });
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        this.alertService.dialogConfirm(
+          'Cancelled',
+          'Your imaginary file is safe :)',
+          TypeAlertEnum.ERROR
+        );
+      }
+    });
   }
 
-  updateItem() {
-    console.log(this.movie)
+  navigateTo = (url: string) => {
+    this.router.navigateByUrl(url);
+  };
+
+  async updateItem() {
+    console.log(this.movie);
   }
 
   ngOnDestroy(): void {

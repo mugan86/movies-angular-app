@@ -70,7 +70,7 @@ export class MoviesService {
         tap(() => this.loadingData$.next(true)),
         tap((movies) => this.movies$.next(movies)),
         tap(() => this.loadingData$.next(false)),
-        catchError(this.handleError)
+        catchError(catchError((error) => of(error)))
       )
       .subscribe({
         complete: () => sub$.unsubscribe(),
@@ -106,7 +106,7 @@ export class MoviesService {
         }),
         tap((movie) => this.movie$.next(movie)),
         tap(() => this.loadingData$.next(false)),
-        catchError(this.handleError)
+        catchError((error) => of(error))
       )
       .subscribe({
         complete: () => sub$.unsubscribe(),
@@ -117,19 +117,9 @@ export class MoviesService {
   delete(id: number) {
     const url = `${this.baseUrl}/movies/${id}`;
 
-    const sub$: Subscription = this.http
-      .delete<IMovie[]>(url)
-      .pipe(
-        tap(() => this.loadingData$.next(true)),
-        tap(() => this.loadingData$.next(false)),
-        catchError(this.handleError)
-      )
-      .subscribe({
-        complete: () => {
-          sub$.unsubscribe();
-        },
-        error: () => sub$.unsubscribe(),
-      });
+    return this.http.delete<IMovie[]>(url).pipe(
+      catchError((error) => of(error))
+    );
   }
 
   reset = () => {

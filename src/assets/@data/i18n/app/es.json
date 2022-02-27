@@ -3,6 +3,12 @@
       "actors": "Actores",
       "companies": "Compañías",
       "movies": "Películas"
+    },
+    "ALERTS": {
+      "deleteTitle": "¿Estás listo para eliminar?",
+      "deleteContent": "Esta acción eliminará definitivamente el elemento seleccionado",
+      "confirm": "Si, estoy listo",
+      "cancel": "No, quizás más tarde"
     }
   }
   
