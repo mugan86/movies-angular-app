@@ -16,12 +16,14 @@ import {
   throwError,
 } from 'rxjs';
 import { IMovie } from './movie.interface';
+import { BASE_URL } from '@core/constants/api';
+import { ActorService } from '@pages/actors/actor.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MoviesService {
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = BASE_URL;
 
   private loadingData$ = new BehaviorSubject<boolean>(true);
   private errorData$ = new BehaviorSubject<{
@@ -36,7 +38,7 @@ export class MoviesService {
   private movies$ = new BehaviorSubject<IMovie[]>([]);
   private movie$ = new Subject<IMovie>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private actorsService: ActorService) {}
 
   get loadingData() {
     return this.loadingData$.asObservable();
@@ -81,9 +83,7 @@ export class MoviesService {
         switchMap((movie: IMovie) => {
           return forkJoin([
             of(movie),
-            ...movie.actors.map((item) =>
-              this.http.get<IActor>(`${this.baseUrl}/actors/${item}`)
-            ),
+            ...movie.actors.map((item) => this.actorsService.item(item)),
             this.http.get<ICompany>(`${this.baseUrl}/companies`),
           ]).pipe(
             map((data: any[]) => {
@@ -113,7 +113,7 @@ export class MoviesService {
     this.loadingData$.next(true);
     this.movies$.next([]);
     this.movie$ = new Subject<IMovie>();
-  }
+  };
 
   /**
    * Sistema muy basico de manejo de errores
