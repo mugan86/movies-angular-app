@@ -1,3 +1,4 @@
+import { AlertService } from '@shared/services/alert.service';
 import { ICompany } from '@pages/companies/company.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -18,6 +19,7 @@ import { IMovie } from './movie.interface';
 import { BASE_URL } from '@core/constants/api';
 import { ActorService } from '@pages/actors/actor.service';
 import { CompaniesService } from '@pages/companies/companies.service';
+import { TypeAlertEnum } from '@core/constants/alerts';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -42,7 +44,9 @@ export class MoviesService {
   constructor(
     private http: HttpClient,
     private actorsService: ActorService,
-    private companiesService: CompaniesService
+    private companiesService: CompaniesService,
+    private alertService: AlertService,
+    private router: Router
   ) {}
 
   get loadingData() {
@@ -106,7 +110,14 @@ export class MoviesService {
         }),
         tap((movie) => this.movie$.next(movie)),
         tap(() => this.loadingData$.next(false)),
-        catchError((error) => of(error))
+        catchError(async (error) =>
+          this.alertService
+            .dialogConfirm('eeee', 'eeee', TypeAlertEnum.ERROR)
+            .then((value) => {
+              this.router.navigateByUrl('/');
+              return value;
+            })
+        )
       )
       .subscribe({
         complete: () => sub$.unsubscribe(),
@@ -117,9 +128,9 @@ export class MoviesService {
   delete(id: number) {
     const url = `${this.baseUrl}/movies/${id}`;
 
-    return this.http.delete<IMovie[]>(url).pipe(
-      catchError((error) => of(error))
-    );
+    return this.http
+      .delete<IMovie[]>(url)
+      .pipe(catchError((error) => of(error)));
   }
 
   reset = () => {
