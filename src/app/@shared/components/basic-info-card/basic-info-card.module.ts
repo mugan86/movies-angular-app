@@ -4,13 +4,8 @@ import { CommonModule } from '@angular/common';
 import { BasicInfoCardComponent } from './basic-info-card.component';
 
 @NgModule({
-  declarations: [
-    BasicInfoCardComponent
-  ],
-  imports: [
-    CommonModule,
-    HashtagModule
-  ],
-  exports: [BasicInfoCardComponent]
+  declarations: [BasicInfoCardComponent],
+  imports: [CommonModule, HashtagModule],
+  exports: [BasicInfoCardComponent],
 })
-export class BasicInfoCardModule { }
+export class BasicInfoCardModule {}
