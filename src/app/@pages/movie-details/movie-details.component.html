@@ -1,5 +1,5 @@
 <app-details-content-item *ngIf="loading$ | async"></app-details-content-item>
-<section class="container" *ngIf="(loading$ | async) === false">
+<section class="container" *ngIf="(loading$ | async) === false" (resized)="onResized($event)">
   <div class="row mb-2">
     <div class="col-lg"></div>
     <div class="col-lg-3">
@@ -14,20 +14,20 @@
   <div class="row">
     <div class="col-md-3">
       <img
-        class="img-fluid"
+        class="img-fluid" [ngClass]="{'cover': screen.width < 450}"
         [src]="movie?.poster"
         [alt]="movie?.title"
         onerror="this.src='/assets/img/default.webp'"
       />
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-8" [ngClass]="{'mt-2': screen.width <= 450}">
       <div class="row">
-        <div class="col-lg text-start">
+        <div class="col text-start">
           <h3>{{ "details.rating" | translate }}</h3>
           <p>{{ movie?.imdbRating }}</p>
         </div>
-        <div class="col-lg text-end">
+        <div class="col text-end">
           <h3>{{ "details.time" | translate }}</h3>
           <p>{{ movie?.duration || 0 | duration }}</p>
         </div>

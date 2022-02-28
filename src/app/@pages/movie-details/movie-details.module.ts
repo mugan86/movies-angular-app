@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { CustomTranslateLoader } from '@core/helpers/i18n';
 import { FEATURE_DIRECTORIES_I18N } from '@core/constants/i18n';
+import { AngularResizeEventModule } from 'angular-resize-event';
 
 const createTranslateLoader = (http: HttpClient) => {
   return new CustomTranslateLoader(
@@ -32,6 +33,7 @@ const createTranslateLoader = (http: HttpClient) => {
     }),
     DetailsContentItemModule,
     HashtagModule,
+    AngularResizeEventModule
   ],
 })
 export class MovieDetailsModule {}

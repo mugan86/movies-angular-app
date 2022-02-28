@@ -1,4 +1,4 @@
-import { IMovie } from '../movies/movie.interface';
+import { IMovie } from '@pages/movies/movie.interface';
 import { Component } from '@angular/core';
 import { TitleService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs';
 import { AlertService } from '@shared/services/alert.service';
 import Swal from 'sweetalert2';
 import { TypeAlertEnum } from '@core/constants/alerts';
+import { ResizedEvent } from 'angular-resize-event';
 
 @Component({
   selector: 'app-movie-details',
@@ -21,6 +22,9 @@ export class MovieDetailsComponent {
   id: string = '';
   movie?: IMovie;
   loading$: Observable<boolean>;
+  screen: { width: number, height: number} = {
+    width: 0, height: 0
+  }
   constructor(
     private titleService: TitleService,
     private translate: TranslateService,
@@ -32,9 +36,11 @@ export class MovieDetailsComponent {
     // this.titleService.change(menuItems[0].label);
     this.translate.setDefaultLang('es');
     this.titleService.change('');
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.moviesService.getItem(Number(params.get('id')));
-    });
+    this.route.paramMap
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((params: ParamMap) => {
+        this.moviesService.getItem(Number(params.get('id')));
+      });
     // Escuchando cambios
     this.moviesService.movie
       .pipe(takeUntil(this.unsubscribe$))
@@ -50,38 +56,39 @@ export class MovieDetailsComponent {
   trackByElement = (__: number, elementString: any): string => elementString;
 
   async deleteItem() {
-    await this.alertService.dialogConfirmCancel(
-      'ALERTS.deleteTitle',
-      'ALERTS.deleteContent',
-      TypeAlertEnum.WARNING
-    ).then((result) => {
-      if (result.isConfirmed) {
-        this.moviesService.delete(this.movie!.id).subscribe((data) => {
-          if (data.status === undefined) {
-            this.alertService.dialogConfirm(
-              'Eliminado',
-              'Selección eliminada correctamente',
-              TypeAlertEnum.SUCCESS
-            ).then(() => this.navigateTo('/movies'));
-          } else {
-            this.alertService.dialogConfirm(
-              'No eliminado',
-              'Debido a un problema no se ha eliminado',
-              TypeAlertEnum.WARNING
-            )
-          }
-        });
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        this.alertService.dialogConfirm(
-          'Cancelled',
-          'Your imaginary file is safe :)',
-          TypeAlertEnum.ERROR
-        );
-      }
-    });
+    await this.alertService
+      .dialogConfirmCancel(
+        'ALERTS.deleteTitle',
+        'ALERTS.deleteContent',
+        TypeAlertEnum.WARNING
+      )
+      .then((result: any) => {
+        if (result.isConfirmed) {
+          this.moviesService.delete(this.movie!.id).subscribe((data) => {
+            if (data.status === undefined) {
+              this.alertService
+                .dialogConfirm(
+                  'Eliminado',
+                  'Selección eliminada correctamente',
+                  TypeAlertEnum.SUCCESS
+                )
+                .then(() => this.navigateTo('/movies'));
+            } else {
+              this.alertService.dialogConfirm(
+                'No eliminado',
+                'Debido a un problema no se ha eliminado',
+                TypeAlertEnum.WARNING
+              );
+            }
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          this.alertService.dialogConfirm(
+            'Cancelled',
+            'Your imaginary file is safe :)',
+            TypeAlertEnum.ERROR
+          );
+        }
+      });
   }
 
   navigateTo = (url: string) => {
@@ -90,6 +97,11 @@ export class MovieDetailsComponent {
 
   async updateItem() {
     console.log(this.movie);
+  }
+
+  onResized(event: ResizedEvent): void {
+    this.screen.width = Math.round(event.newRect.width);
+    this.screen.height = Math.round(event.newRect.height);
   }
 
   ngOnDestroy(): void {
