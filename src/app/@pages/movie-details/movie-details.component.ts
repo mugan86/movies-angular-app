@@ -1,17 +1,16 @@
+import { AlertService } from '@shared/services/alert.service';
 import { IMovie } from '@pages/movies/movie.interface';
 import { Component } from '@angular/core';
-import { TitleService } from '@core/services';
+import { TitleService,  NavigationService, ScreenService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { MoviesService } from '../movies/movies.service';
+import { MoviesService } from '@pages/movies/movies.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs';
-import { AlertService } from '@shared/services/alert.service';
 import Swal from 'sweetalert2';
 import { TypeAlertEnum } from '@core/constants/alerts';
-import { ResizedEvent } from 'angular-resize-event';
-import { NavigationService } from '@core/services/navigation.service';
+import { IScreen } from '@core/interfaces/screen.interface';
 
 @Component({
   selector: 'app-movie-details',
@@ -34,7 +33,8 @@ export class MovieDetailsComponent {
     private route: ActivatedRoute,
     private alertService: AlertService,
     private router: Router,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private screenService: ScreenService
   ) {
     // this.titleService.change(menuItems[0].label);
     this.translate.setDefaultLang('es');
@@ -56,6 +56,9 @@ export class MovieDetailsComponent {
     );
 
     this.navigationService.isDetailsPage(true);
+    this.screenService.screen$.subscribe((screen: IScreen) => {
+      this.screen = screen;
+    });
   }
 
   trackByElement = (__: number, elementString: any): string => elementString;
@@ -102,11 +105,6 @@ export class MovieDetailsComponent {
 
   async updateItem() {
     console.log(this.movie);
-  }
-
-  onResized(event: ResizedEvent): void {
-    this.screen.width = Math.round(event.newRect.width);
-    this.screen.height = Math.round(event.newRect.height);
   }
 
   ngOnDestroy(): void {
