@@ -1,12 +1,28 @@
 <nav class="navbar navbar-light bg-light">
   <div class="container-fluid">
     <div class="navbar-brand">
-      <button class="btn bg-transparent" id="sidebarToggle" (click)="openNav()" *ngIf="!isDetails">
-        <i class="fa-solid fa-bars"></i>
+      <button
+        *ngIf="!isDetails"
+        class="btn float-start"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvas"
+        role="button"
+      >
+        <i
+          class="fa-solid fa-bars"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvas"
+        ></i>
       </button>
-      <button type="button" class="btn bg-transparent" (click)="back()" *ngIf="isDetails">
+      <button
+        type="button"
+        class="btn bg-transparent"
+        (click)="back()"
+        *ngIf="isDetails"
+      >
         <i class="fa-solid fa-arrow-left-long"></i>
       </button>
+
       <span class="h3 ms-4 pt-4">{{ title | translate }}</span>
     </div>
   </div>

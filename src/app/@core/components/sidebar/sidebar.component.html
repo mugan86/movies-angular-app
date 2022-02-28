@@ -1,9 +1,36 @@
-<aside id="sidebar-menu" class="sidenav">
-  <button class="sidebar-menu__close-button" (click)="closeNav()">Menú&times;</button>
-  <a
-    *ngFor="let item of principalMenu; trackBy: trackById"
-    class="p-3"
-    (click)="navigateTo(item.url)"
-    >{{ item.label  | translate}}</a
-  >
+<aside
+  class="offcanvas offcanvas-start"
+  [ngClass]="screen.width > 460 ? 'w-25' : 'w-75'"
+  tabindex="-1"
+  id="offcanvas"
+  data-bs-keyboard="false"
+  data-bs-backdrop="false"
+>
+  <div class="offcanvas-header" [ngStyle]="{ border: '1px solid red;' }">
+    <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
+    <button
+      type="button"
+      class="btn-close text-reset float-end"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body px-0">
+    <ul
+      class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start"
+      id="menu"
+    >
+      <li
+        class="nav-item"
+        *ngFor="let item of principalMenu; trackBy: trackById"
+      >
+        <a
+          class="p-3 nav-link"
+          data-bs-dismiss="offcanvas"
+          (click)="navigateTo(item.url)"
+          >{{ item.label | translate }}</a
+        >
+      </li>
+    </ul>
+  </div>
 </aside>
