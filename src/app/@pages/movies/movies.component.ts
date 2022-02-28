@@ -6,6 +6,7 @@ import { IMovie } from './movie.interface';
 import { Observable } from 'rxjs/internal/Observable';
 import { MoviesService } from './movies.service';
 import { Subject, takeUntil } from 'rxjs';
+import { NavigationService } from '@core/services/navigation.service';
 @Component({
   selector: 'app-movies',
   templateUrl: './movies.component.html',
@@ -19,7 +20,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
   constructor(
     private titleService: TitleService,
     private translate: TranslateService,
-    private moviesService: MoviesService
+    private moviesService: MoviesService,
+    private navigationService: NavigationService
   ) {
     this.titleService.change(menuItems[0].label);
     this.translate.setDefaultLang('es');
@@ -28,6 +30,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
     this.movies$ = this.moviesService.movies.pipe(takeUntil(this.unsubscribe$));
     this.loading$ = this.moviesService.loadingData.pipe(takeUntil(this.unsubscribe$));
     this.errorData = this.moviesService.errorData.pipe(takeUntil(this.unsubscribe$));
+
+    this.navigationService.isDetailsPage(false);
   }
 
   ngOnInit(): void {

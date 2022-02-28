@@ -2,6 +2,6 @@
 <!-- Top navigation-->
 <app-navbar></app-navbar>
 <!-- Page content-->
-<div class="container mt-3">
+<div class="container mt-3" (resized)="onResized($event)">
   <router-outlet></router-outlet>
 </div>

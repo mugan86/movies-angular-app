@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { IScreen } from '@core/interfaces/screen.interface';
+import { ScreenService } from '@core/services/screen.service';
 import { SidebarService } from '@core/services/sidebar.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -14,23 +16,30 @@ export class SidebarComponent implements OnInit {
     label: string;
     icon: string;
   }> = [];
-  constructor(private sidebarService: SidebarService, private router: Router,
-    private readonly translate: TranslateService) {
-      this.translate.setDefaultLang('es');
-    }
+  screen: { width: number; height: number } = {
+    width: 0,
+    height: 0,
+  };
+  constructor(
+    private sidebarService: SidebarService,
+    private router: Router,
+    private readonly translate: TranslateService,
+    private screenService: ScreenService
+  ) {
+    this.translate.setDefaultLang('es');
+
+    this.screenService.screen$.subscribe((screen: IScreen) => {
+      this.screen = screen;
+    });
+  }
 
   ngOnInit(): void {
     this.principalMenu = this.sidebarService.getPrincipalMenuItems();
   }
 
-  /* Set the width of the side navigation to 0 */
-  closeNav() {
-    this.sidebarService.closeMenu();
-  }
   trackById = (index: number, menuItem: any): string => menuItem.id;
 
   navigateTo = (route: string) => {
-    this.router.navigate(['/' + route])
-    this.closeNav()
+    this.router.navigate(['/' + route]);
   };
 }

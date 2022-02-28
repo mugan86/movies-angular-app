@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./content-items-loader.component.css'],
 })
 export class ContentItemsLoaderComponent implements OnInit {
-  @Input('elementsShow') elementsShow: number = 6;
+  @Input() elementsShow: number = 6;
   items: Array<number> = [];
 
   ngOnInit(): void {
