@@ -2,3 +2,9 @@
 .card {
   cursor: pointer;
 }
+
+.cover {
+  object-fit: cover;
+  width: 100%;
+  max-height: 200px;
+}
