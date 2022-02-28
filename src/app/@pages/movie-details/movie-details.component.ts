@@ -11,6 +11,7 @@ import { AlertService } from '@shared/services/alert.service';
 import Swal from 'sweetalert2';
 import { TypeAlertEnum } from '@core/constants/alerts';
 import { ResizedEvent } from 'angular-resize-event';
+import { NavigationService } from '@core/services/navigation.service';
 
 @Component({
   selector: 'app-movie-details',
@@ -22,16 +23,18 @@ export class MovieDetailsComponent {
   id: string = '';
   movie?: IMovie;
   loading$: Observable<boolean>;
-  screen: { width: number, height: number} = {
-    width: 0, height: 0
-  }
+  screen: { width: number; height: number } = {
+    width: 0,
+    height: 0,
+  };
   constructor(
     private titleService: TitleService,
     private translate: TranslateService,
     private moviesService: MoviesService,
     private route: ActivatedRoute,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private navigationService: NavigationService
   ) {
     // this.titleService.change(menuItems[0].label);
     this.translate.setDefaultLang('es');
@@ -51,6 +54,8 @@ export class MovieDetailsComponent {
     this.loading$ = this.moviesService.loadingData.pipe(
       takeUntil(this.unsubscribe$)
     );
+
+    this.navigationService.isDetailsPage(true);
   }
 
   trackByElement = (__: number, elementString: any): string => elementString;
@@ -105,7 +110,6 @@ export class MovieDetailsComponent {
   }
 
   ngOnDestroy(): void {
-    console.log('Destroy');
     this.moviesService.reset();
     this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
