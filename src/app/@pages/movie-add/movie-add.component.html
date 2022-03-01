@@ -15,8 +15,8 @@
           form.title.errors && form.title.touched && form.title.invalid
       }"
     />
-    <div *ngIf="form['title'].errors" class="invalid-feedback">
-      <div *ngIf="form['title'].errors['required']">
+    <div *ngIf="form.title.errors" class="invalid-feedback">
+      <div *ngIf="form.title.errors.required">
         {{ "forms.validationMessages.titleRequired" | translate }}
       </div>
     </div>
@@ -40,13 +40,17 @@
       *ngIf="form.poster.touched && form.poster.invalid"
       class="invalid-feedback"
     >
-      <div *ngIf="form.poster.errors?.required">Please provide url</div>
-      <div *ngIf="form.poster.errors?.pattern">Please provide valid url</div>
+      <div *ngIf="form.poster.errors?.required">
+        {{ "forms.validationMessages.posterRequired" | translate }}
+      </div>
+      <div *ngIf="form.poster.errors?.pattern">
+        {{ "forms.validationMessages.posterValidUrl" | translate }}
+      </div>
     </div>
   </div>
   <div class="mb-3">
-    <label for="company" class="form-label">{{
-      "forms.labels.company" | translate
+    <label for="genres" class="form-label">{{
+      "forms.labels.genres" | translate
     }}</label>
     <div class="input-group">
       <input
@@ -56,6 +60,7 @@
         aria-label="Recipient's username"
         aria-describedby="basic-addon2"
         (keydown.enter)="addValue($event)"
+        formControlName="genres"
       />
       <div class="input-group-append">
         <button class="btn bg-transparent" style="border: 1px solid #212529">
@@ -65,19 +70,36 @@
     </div>
   </div>
   <div class="mb-3">
+    <label for="actors" class="form-label">{{
+      "forms.labels.actors" | translate
+    }}</label>
+    <input
+      type="text"
+      class="form-control"
+      id="actors"
+      placeholder="{{ 'forms.labels.actors' | translate }}"
+      formControlName="actors"
+      [ngClass]="{
+        'is-invalid':
+          form.actors.errors && form.actors.touched && form.actors.invalid
+      }"
+    />
+    <div *ngIf="form.actors.errors" class="invalid-feedback">
+      <div *ngIf="form.actors.errors.required">
+        {{ "forms.validationMessages.actorsRequired" | translate }}
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
     <label for="company" class="form-label">{{
       "forms.labels.company" | translate
     }}</label>
-    <select
-      class="custom-select mb-3 form-select"
-      (change)="changeCompany($event)"
-      formControlName="company"
-    >
+    <select class="custom-select mb-3 form-select" formControlName="company">
       <option [ngValue]="null" disabled>
         {{ "forms.labels.companyDescription" | translate }}
       </option>
       <option *ngFor="let company of companiesList" [ngValue]="company">
-        {{ company}}
+        {{ company.label }}
       </option>
     </select>
   </div>
@@ -123,7 +145,19 @@
       max="10"
       step="1"
       formControlName="rating"
+      [ngClass]="{
+        'is-invalid':
+          form.rating.errors && form.rating.touched && form.rating.invalid
+      }"
     />
+    <div *ngIf="form.rating.errors" class="invalid-feedback">
+      <div *ngIf="form.rating.errors.max">
+        {{ "forms.validationMessages.ratingMaxValue" | translate }}
+      </div>
+      <div *ngIf="form.rating.errors.min">
+        {{ "forms.validationMessages.ratingMinValue" | translate }}
+      </div>
+    </div>
   </div>
   <button type="submit" class="btn btn-primary">
     {{ "forms.buttons.submit" | translate }}
