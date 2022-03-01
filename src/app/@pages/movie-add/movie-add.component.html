@@ -1,4 +1,5 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="createForm">
+<app-simple-loader *ngIf="loading"></app-simple-loader>
+<form (ngSubmit)="onSubmit()" [formGroup]="createForm" *ngIf="!loading">
   <div class="mb-3">
     <label for="title" class="form-label">{{
       "forms.labels.title" | translate
@@ -32,9 +33,11 @@
     (change)="changeCompany($event)"
     formControlName="company"
   >
-    <option value="{{'forms.labels.companyDescription' | translate}}"></option>
-    <option *ngFor="let city of companiesList" [ngValue]="city">
-      {{ city }}
+    <option [ngValue]="null" disabled>
+      {{'forms.labels.companyDescription' | translate}}
+    </option>
+    <option *ngFor="let company of companiesList" [ngValue]="company.name">
+      {{ company.name }}
     </option>
   </select>
   </div>
