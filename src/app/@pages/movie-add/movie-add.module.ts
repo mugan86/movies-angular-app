@@ -3,7 +3,16 @@ import { CommonModule } from '@angular/common';
 import { MovieAddComponent } from './movie-add.component';
 import { MovieAddRoutingModule } from './movie-add-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { CustomTranslateLoader } from '@core/helpers/i18n';
+import { FEATURE_DIRECTORIES_I18N } from '@core/constants/i18n';
+const createTranslateLoader = (http: HttpClient) => {
+  return new CustomTranslateLoader(
+    http,
+    FEATURE_DIRECTORIES_I18N.moviesAdd
+  );
+};
 @NgModule({
   declarations: [
     MovieAddComponent
@@ -11,7 +20,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     MovieAddRoutingModule,
-    FormsModule, ReactiveFormsModule
+    FormsModule, ReactiveFormsModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+      isolate: true,
+    }),
   ]
 })
 export class MovieAddModule { }

@@ -1,0 +1,20 @@
+{
+    "forms": {
+        "buttons": {
+            "submit": "Crear película"
+        },
+        "labels": {
+            "title": "Título",
+            "poster": "Póster (url)",
+            "genres": "Géneros",
+            "actors": "Actores",
+            "company": "Estudio",
+            "releaseYear": "Año",
+            "duration": "Duration",
+            "ratings": "Puntuación"
+        },
+        "validationMessages": {
+            "titleRequired": "El título es necesario para poder crear la película"
+        }
+    }
+}

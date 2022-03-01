@@ -20,7 +20,8 @@ export class MovieAddComponent {
       {
         title: ["", Validators.required],
         poster: ["", [Validators.required]],
-        // duration: ["120", [Validators.required, Validators.max(300), Validators.min(70)]],
+        year: [`${this.yearLimit}`, [Validators.required, Validators.max(this.yearLimit), Validators.min(2000)]],
+        duration: ["120", [Validators.required, Validators.max(300), Validators.min(70)]],
         // rating: ["5", Validators.required,  Validators.max(10), Validators.min(1)]
       }
     );
