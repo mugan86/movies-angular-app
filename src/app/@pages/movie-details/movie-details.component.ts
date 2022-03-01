@@ -66,8 +66,8 @@ export class MovieDetailsComponent implements OnDestroy{
   async deleteItem() {
     await this.alertService
       .dialogConfirmCancel(
-        'ALERTS.deleteTitle',
-        'ALERTS.deleteContent',
+        'alerts.deleteTitle',
+        'alerts.deleteContent',
         TypeAlertEnum.WARNING
       )
       .then((result: any) => {

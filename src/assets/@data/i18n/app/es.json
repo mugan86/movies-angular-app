@@ -1,10 +1,10 @@
 {
-    "NAVBAR_SIDEBAR": {
+    "navbarSidebar": {
       "actors": "Actores",
       "companies": "Compañías",
       "movies": "Películas"
     },
-    "ALERTS": {
+    "alerts": {
       "deleteTitle": "¿Estás listo para eliminar?",
       "deleteContent": "Esta acción eliminará definitivamente el elemento seleccionado",
       "confirm": "Si, estoy listo",
