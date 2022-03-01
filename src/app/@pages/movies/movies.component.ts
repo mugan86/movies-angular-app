@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { MoviesService } from './movies.service';
 import { Subject, takeUntil } from 'rxjs';
 import { NavigationService } from '@core/services/navigation.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-movies',
   templateUrl: './movies.component.html',
@@ -21,7 +22,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     private translate: TranslateService,
     private moviesService: MoviesService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private router: Router
   ) {
     this.titleService.change(menuItems[0].label);
     this.translate.setDefaultLang('es');
@@ -39,6 +41,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
   }
 
   trackById = (__: number, movie: any): string => movie.id;
+
+  add = () => this.router.navigateByUrl('/movies/add')
 
   ngOnDestroy(): void {
     this.moviesService.reset();

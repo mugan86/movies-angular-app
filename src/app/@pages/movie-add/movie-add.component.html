@@ -10,7 +10,10 @@
       id="title"
       placeholder="{{ 'forms.labels.title' | translate }}"
       formControlName="title"
-      [ngClass]="{ 'is-invalid': form.title.errors && form.title.touched && form.title.invalid }"
+      [ngClass]="{
+        'is-invalid':
+          form.title.errors && form.title.touched && form.title.invalid
+      }"
     />
     <div *ngIf="form['title'].errors" class="invalid-feedback">
       <div *ngIf="form['title'].errors['required']">
@@ -42,7 +45,27 @@
     </div>
   </div>
   <div class="mb-3">
-    <label for="poster" class="form-label">{{
+    <label for="company" class="form-label">{{
+      "forms.labels.company" | translate
+    }}</label>
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Recipient's username"
+        aria-label="Recipient's username"
+        aria-describedby="basic-addon2"
+        (keydown.enter)="addValue($event)"
+      />
+      <div class="input-group-append">
+        <button class="btn bg-transparent" style="border: 1px solid #212529">
+          +
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="company" class="form-label">{{
       "forms.labels.company" | translate
     }}</label>
     <select
@@ -53,8 +76,8 @@
       <option [ngValue]="null" disabled>
         {{ "forms.labels.companyDescription" | translate }}
       </option>
-      <option *ngFor="let company of companiesList" [ngValue]="company.name">
-        {{ company.name }}
+      <option *ngFor="let company of companiesList" [ngValue]="company">
+        {{ company}}
       </option>
     </select>
   </div>

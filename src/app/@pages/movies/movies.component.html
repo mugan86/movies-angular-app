@@ -2,6 +2,9 @@
   [elementsShow]="9"
   *ngIf="loading$ | async"
 ></app-content-items-loader>
+<button type="button" class="btn btn-success btn-circle btn-xl me-2" (click)="add()">
+  <i class="fa-solid fa-pencil"></i>
+</button>
 <div class="row" *ngIf="(loading$ | async) === false">
   <div
     class="col-sm-4"

@@ -5,6 +5,7 @@ import { NavigationService, TitleService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { CompaniesService } from '@pages/companies/companies.service';
 import { URL_VALIDATION_REGEX } from '@core/constants/regex';
+import { ActorService } from '@pages/actors/actor.service';
 
 @Component({
   selector: 'app-movie-add',
@@ -24,18 +25,22 @@ export class MovieAddComponent implements OnInit {
     rating: 0,
     movies: []
   }
-  companiesList: Array<ICompany> = [];
+  companiesList: Array<string> = [];
+  actorsList: Array<string> = [];
+  genresList: Array<string> = [];
   constructor(
     private formBuilder: FormBuilder,
     private titleService: TitleService,
     private translate: TranslateService,
     private navigationService: NavigationService,
-    private companiesService: CompaniesService
+    private companiesService: CompaniesService,
+    private actorService: ActorService
   ) {
     this.createForm = this.formBuilder.group({
       title: ['', Validators.required],
       poster: ['', [Validators.required, Validators.pattern(URL_VALIDATION_REGEX)]],
       company: [null, [Validators.required]],
+      actors: [null, [Validators.required]],
       year: [
         `${this.yearLimit}`,
         [
@@ -50,20 +55,26 @@ export class MovieAddComponent implements OnInit {
       ],
       rating: ['5', Validators.required],
     });
+    // https://www.positronx.io/angular-url-validation-with-reactive-forms-tutorial/
     // https://www.positronx.io/angular-select-dropdown-with-reactive-forms-examples/
     // https://stackblitz.com/edit/ng-reactive-tpl-forms?file=src%2Fapp%2Freactive-forms%2Freactive-forms.component.html
 
     this.translate.setDefaultLang('es');
-    this.titleService.change('');
+    this.titleService.change('navbarSidebar.moviesAdd');
     this.navigationService.isDetailsPage(true);
   }
 
   ngOnInit() {
     this.loading = true;
     this.companiesService.list().subscribe((companies) => {
-      this.companiesList = companies;
+      this.companiesList.length = 0;
+      companies.map((company) => this.companiesList.push(company.name));
       this.loading = false;
     });
+
+    /*this.actorService.list((actors) => {
+
+    })*/
   }
 
   get form() {
@@ -90,4 +101,8 @@ export class MovieAddComponent implements OnInit {
   changeCompany = (event: Event) => {
     console.log()
   };
+
+  addValue(event: any) {
+    console.log(event.target?.value);
+  }
 }
