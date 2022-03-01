@@ -9,6 +9,7 @@
             "genres": "Géneros",
             "actors": "Actores",
             "company": "Estudio",
+            "companyDescription": "Selecciona un estudio",
             "releaseYear": "Año",
             "duration": "Duration",
             "ratings": "Puntuación"
