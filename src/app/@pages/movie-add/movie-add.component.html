@@ -10,38 +10,55 @@
       id="title"
       placeholder="{{ 'forms.labels.title' | translate }}"
       formControlName="title"
+      [ngClass]="{ 'is-invalid': form.title.errors && form.title.touched && form.title.invalid }"
     />
+    <div *ngIf="form['title'].errors" class="invalid-feedback">
+      <div *ngIf="form['title'].errors['required']">
+        {{ "forms.validationMessages.titleRequired" | translate }}
+      </div>
+    </div>
   </div>
   <div class="mb-3">
     <label for="poster" class="form-label">{{
       "forms.labels.poster" | translate
     }}</label>
     <input
-      type="text"
+      type="url"
       class="form-control"
       id="poster"
       placeholder="{{ 'forms.labels.poster' | translate }}"
       formControlName="poster"
+      [ngClass]="{
+        'is-invalid':
+          form.poster.errors && form.poster.touched && form.poster.invalid
+      }"
     />
+    <div
+      *ngIf="form.poster.touched && form.poster.invalid"
+      class="invalid-feedback"
+    >
+      <div *ngIf="form.poster.errors?.required">Please provide url</div>
+      <div *ngIf="form.poster.errors?.pattern">Please provide valid url</div>
+    </div>
   </div>
   <div class="mb-3">
     <label for="poster" class="form-label">{{
       "forms.labels.company" | translate
     }}</label>
     <select
-    class="custom-select mb-3 form-select"
-    (change)="changeCompany($event)"
-    formControlName="company"
-  >
-    <option [ngValue]="null" disabled>
-      {{'forms.labels.companyDescription' | translate}}
-    </option>
-    <option *ngFor="let company of companiesList" [ngValue]="company.name">
-      {{ company.name }}
-    </option>
-  </select>
+      class="custom-select mb-3 form-select"
+      (change)="changeCompany($event)"
+      formControlName="company"
+    >
+      <option [ngValue]="null" disabled>
+        {{ "forms.labels.companyDescription" | translate }}
+      </option>
+      <option *ngFor="let company of companiesList" [ngValue]="company.name">
+        {{ company.name }}
+      </option>
+    </select>
   </div>
-  
+
   <div class="mb-3">
     <label for="year" class="form-label">{{
       "forms.labels.releaseYear" | translate

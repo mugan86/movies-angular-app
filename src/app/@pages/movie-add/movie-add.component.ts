@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationService, TitleService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { CompaniesService } from '@pages/companies/companies.service';
+import { URL_VALIDATION_REGEX } from '@core/constants/regex';
 
 @Component({
   selector: 'app-movie-add',
@@ -33,7 +34,7 @@ export class MovieAddComponent implements OnInit {
   ) {
     this.createForm = this.formBuilder.group({
       title: ['', Validators.required],
-      poster: ['', [Validators.required]],
+      poster: ['', [Validators.required, Validators.pattern(URL_VALIDATION_REGEX)]],
       company: [null, [Validators.required]],
       year: [
         `${this.yearLimit}`,
