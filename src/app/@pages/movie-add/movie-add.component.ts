@@ -12,6 +12,7 @@ export class MovieAddComponent {
   createForm: FormGroup;
   yearLimit: number = new Date().getFullYear();
   submitted: boolean = false;
+  companiesList: Array<string> = ['Florida', 'South Dakota', 'Tennessee', 'Michigan'];
   constructor(private formBuilder: FormBuilder,
     private titleService: TitleService,
     private translate: TranslateService,
@@ -20,9 +21,10 @@ export class MovieAddComponent {
       {
         title: ["", Validators.required],
         poster: ["", [Validators.required]],
+        company: ['', [Validators.required]],
         year: [`${this.yearLimit}`, [Validators.required, Validators.max(this.yearLimit), Validators.min(2000)]],
         duration: ["120", [Validators.required, Validators.max(300), Validators.min(70)]],
-        // rating: ["5", Validators.required,  Validators.max(10), Validators.min(1)]
+        rating: ["5", Validators.required]
       }
     );
 
@@ -52,6 +54,10 @@ export class MovieAddComponent {
   onReset() {
     this.submitted = false;
     this.createForm.reset();
+  }
+
+  changeCompany = (event: Event) => {
+
   }
 
 }

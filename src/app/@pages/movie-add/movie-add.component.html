@@ -24,6 +24,22 @@
     />
   </div>
   <div class="mb-3">
+    <label for="poster" class="form-label">{{
+      "forms.labels.company" | translate
+    }}</label>
+    <select
+    class="custom-select mb-3 form-select"
+    (change)="changeCompany($event)"
+    formControlName="company"
+  >
+    <option value="{{'forms.labels.companyDescription' | translate}}"></option>
+    <option *ngFor="let city of companiesList" [ngValue]="city">
+      {{ city }}
+    </option>
+  </select>
+  </div>
+  
+  <div class="mb-3">
     <label for="year" class="form-label">{{
       "forms.labels.releaseYear" | translate
     }}</label>
@@ -53,15 +69,19 @@
       formControlName="duration"
     />
   </div>
-  <!--
-    <div class="mb-3">
-        <label for="duration" class="form-label">Duración</label>
-        <input type="number" id="duration" class="form-control" value="120" name="duration" min="70" max="300" step="1">
-    </div>
-    <div class="mb-3">
-        <label for="rating" class="form-label">Puntuación</label>
-        <input type="number" id="rating" class="form-control" value="5" name="rating" min="1" max="10" step="1">
-    </div>-->
+  <div class="mb-3">
+    <label for="rating" class="form-label">{{
+      "forms.labels.ratings" | translate
+    }}</label>
+    <input
+      type="number"
+      class="form-control"
+      min="1"
+      max="10"
+      step="1"
+      formControlName="rating"
+    />
+  </div>
   <button type="submit" class="btn btn-primary">
     {{ "forms.buttons.submit" | translate }}
   </button>
