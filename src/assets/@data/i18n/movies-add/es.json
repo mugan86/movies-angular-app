@@ -15,6 +15,9 @@
             "ratings": "Puntuación"
         },
         "validationMessages": {
+            "actorsRequired": "Debes de seleccionar por lo menos un actor o actriz",
+            "posterRequired": "Debes de añadir una dirección de la imagen de la película",
+            "posterValidUrl": "Debes de añadir una URL correcta. P.j: \"http://dummyimage.com/400x600.png/dddddd/000000\"",
             "titleRequired": "El título es necesario para poder crear la película"
         }
     }
