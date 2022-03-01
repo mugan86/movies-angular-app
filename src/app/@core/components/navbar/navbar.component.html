@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="navbar-brand">
       <button
-        *ngIf="!isDetails"
+        *ngIf="!isDetailsOrForm"
         class="btn float-start"
         data-bs-toggle="offcanvas"
         data-bs-target="#offcanvas"
@@ -18,7 +18,7 @@
         type="button"
         class="btn bg-transparent"
         (click)="back()"
-        *ngIf="isDetails"
+        *ngIf="isDetailsOrForm"
       >
         <i class="fa-solid fa-arrow-left-long"></i>
       </button>

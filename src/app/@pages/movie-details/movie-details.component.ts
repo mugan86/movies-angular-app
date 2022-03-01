@@ -1,7 +1,7 @@
 import { AlertService } from '@shared/services/alert.service';
 import { IMovie } from '@pages/movies/movie.interface';
 import { Component, OnDestroy } from '@angular/core';
-import { TitleService,  NavigationService, ScreenService } from '@core/services';
+import { TitleService, NavigationService, ScreenService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { MoviesService } from '@pages/movies/movies.service';
@@ -17,7 +17,7 @@ import { IScreen } from '@core/interfaces/screen.interface';
   templateUrl: './movie-details.component.html',
   styleUrls: ['./movie-details.component.css'],
 })
-export class MovieDetailsComponent implements OnDestroy{
+export class MovieDetailsComponent implements OnDestroy {
   private readonly unsubscribe$ = new Subject();
   id: string = '';
   movie?: IMovie;
@@ -55,7 +55,7 @@ export class MovieDetailsComponent implements OnDestroy{
       takeUntil(this.unsubscribe$)
     );
 
-    this.navigationService.isDetailsPage(true);
+    this.navigationService.isDetailsOrFormPage(true);
     this.screenService.screen$.subscribe((screen: IScreen) => {
       this.screen = screen;
     });

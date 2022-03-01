@@ -1,12 +1,11 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TitleService } from '@core/services/title.service';
+import { TitleService, NavigationService } from '@core/services';
 import menuItems from '@data/menus/principal.json';
 import { IMovie } from './movie.interface';
 import { Observable } from 'rxjs/internal/Observable';
 import { MoviesService } from './movies.service';
 import { Subject, takeUntil } from 'rxjs';
-import { NavigationService } from '@core/services/navigation.service';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-movies',
@@ -30,10 +29,14 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
     // Escuchando cambios
     this.movies$ = this.moviesService.movies.pipe(takeUntil(this.unsubscribe$));
-    this.loading$ = this.moviesService.loadingData.pipe(takeUntil(this.unsubscribe$));
-    this.errorData = this.moviesService.errorData.pipe(takeUntil(this.unsubscribe$));
+    this.loading$ = this.moviesService.loadingData.pipe(
+      takeUntil(this.unsubscribe$)
+    );
+    this.errorData = this.moviesService.errorData.pipe(
+      takeUntil(this.unsubscribe$)
+    );
 
-    this.navigationService.isDetailsPage(false);
+    this.navigationService.isDetailsOrFormPage(false);
   }
 
   ngOnInit(): void {
@@ -42,7 +45,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
   trackById = (__: number, movie: any): string => movie.id;
 
-  add = () => this.router.navigateByUrl('/movies/add')
+  add = () => this.router.navigateByUrl('/movies/add');
 
   ngOnDestroy(): void {
     this.moviesService.reset();
