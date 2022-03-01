@@ -7,6 +7,9 @@ import { BASE_URL } from '@core/constants/api';
 import { Observable } from 'rxjs/internal/Observable';
 import { IActor } from './actor.interface';
 import { SweetAlertResult } from 'sweetalert2';
+import { map } from 'rxjs/internal/operators/map';
+import { last } from 'rxjs';
+import { IListField } from '@core/interfaces/form.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +32,17 @@ export class ActorService {
             console.log(value);
             return value;
           })
+      )
+    );
+
+  names = (): Observable<Array<IListField>> =>
+    this.list().pipe(
+      map((actors: IActor[]) =>
+        actors.map((actor: IActor) => { 
+          return {
+            id: actor.id, label: `${actor.first_name} ${actor.last_name}`
+          }
+        })
       )
     );
 }

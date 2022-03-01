@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { BASE_URL } from '@core/constants/api';
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
+import { IListField } from '@core/interfaces/form.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +19,24 @@ export class CompaniesService {
   item = (item: any): Observable<ICompany> =>
     this.httpClient.get<ICompany>(`${this.baseUrl}/companies/${item}`);
 
-  names = (): Observable<Array<string>> =>
+  names = (): Observable<Array<IListField>> =>
     this.list().pipe(
-      map((company: ICompany[]) => company.map((comp: ICompany) => comp.name))
+      map((company: ICompany[]) => 
+      company.map((comp: ICompany) => {
+        return {
+          id: comp.id, label: comp.name
+        }
+      }))
     );
+
+    /*names = (): Observable<Array<IListField>> =>
+    this.list().pipe(
+      map((actors: IActor[]) =>
+        actors.map((actor: IActor) => { 
+          return {
+            id: actor.id, label: `${actor.first_name} ${actor.last_name}`
+          }
+        })
+      )
+    );*/
 }
