@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/internal/Observable';
 import { AlertService } from '@shared/services/alert.service';
 import { ICompany } from '@pages/companies/company.interface';
 import { HttpClient } from '@angular/common/http';
@@ -145,5 +146,18 @@ export class MoviesService {
   handleError(error: { type: string; status: number; message: string }) {
     console.log(error);
     return throwError(() => EMPTY);
+  }
+
+  genresList = () : Observable<Array<string>> => {
+    const url = `${this.baseUrl}/movies`;
+
+    return this.http
+      .get<IMovie[]>(url).pipe(
+        map((movies: IMovie[]) => {
+          const genres: Array<string> = [];
+          movies.map((movie: IMovie) => genres.push(...movie.genre));          
+          return Array.from(new Set(genres));
+        }),
+      );
   }
 }
