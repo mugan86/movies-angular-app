@@ -59,7 +59,7 @@
         placeholder="Recipient's username"
         aria-label="Recipient's username"
         aria-describedby="basic-addon2"
-        (keydown.enter)="addValue($event)"
+        (keydown.enter)="addGenre($event)"
         formControlName="genres"
       />
       <div class="input-group-append">
@@ -73,22 +73,16 @@
     <label for="actors" class="form-label">{{
       "forms.labels.actors" | translate
     }}</label>
-    <input
-      type="text"
-      class="form-control"
-      id="actors"
-      placeholder="{{ 'forms.labels.actors' | translate }}"
+    <ng-select
       formControlName="actors"
-      [ngClass]="{
-        'is-invalid':
-          form.actors.errors && form.actors.touched && form.actors.invalid
-      }"
-    />
-    <div *ngIf="form.actors.errors" class="invalid-feedback">
-      <div *ngIf="form.actors.errors.required">
-        {{ "forms.validationMessages.actorsRequired" | translate }}
-      </div>
-    </div>
+      [multiple]="true"
+      [hideSelected]="true"
+      placeholder=""
+    >
+      <ng-option *ngFor="let actor of actorsList" [value]="actor.id">{{
+        actor.label
+      }}</ng-option>
+    </ng-select>
   </div>
   <div class="mb-3">
     <label for="company" class="form-label">{{
@@ -114,7 +108,7 @@
       class="form-control"
       name="year"
       min="2000"
-      max="{{ yearLimit }}"
+      max="{{ currentYear }}"
       step="1"
       formControlName="year"
     />
