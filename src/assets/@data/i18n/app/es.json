@@ -2,7 +2,9 @@
     "navbarSidebar": {
       "actors": "Actores",
       "companies": "Compañías",
-      "movies": "Películas"
+      "movies": "Películas",
+      "moviesAdd": "Crear película",
+      "moviesEdit": "Editar película"
     },
     "alerts": {
       "deleteTitle": "¿Estás listo para eliminar?",
