@@ -6,6 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { CompaniesService } from '@pages/companies/companies.service';
 import { URL_VALIDATION_REGEX } from '@core/constants/regex';
 import { ActorService } from '@pages/actors/actor.service';
+import { MoviesService } from '@pages/movies/movies.service';
+import { IListField } from '@core/interfaces/form.interface';
 
 @Component({
   selector: 'app-movie-add',
@@ -25,8 +27,8 @@ export class MovieAddComponent implements OnInit {
     rating: 0,
     movies: []
   }
-  companiesList: Array<string> = [];
-  actorsList: Array<string> = [];
+  companiesList: Array<IListField> = [];
+  actorsList: Array<IListField> = [];
   genresList: Array<string> = [];
   constructor(
     private formBuilder: FormBuilder,
@@ -34,11 +36,13 @@ export class MovieAddComponent implements OnInit {
     private translate: TranslateService,
     private navigationService: NavigationService,
     private companiesService: CompaniesService,
-    private actorService: ActorService
+    private actorService: ActorService,
+    private moviesService: MoviesService
   ) {
     this.createForm = this.formBuilder.group({
       title: ['', Validators.required],
       poster: ['', [Validators.required, Validators.pattern(URL_VALIDATION_REGEX)]],
+      genres: [''],
       company: [null, [Validators.required]],
       actors: [null, [Validators.required]],
       year: [
@@ -61,20 +65,22 @@ export class MovieAddComponent implements OnInit {
 
     this.translate.setDefaultLang('es');
     this.titleService.change('navbarSidebar.moviesAdd');
-    this.navigationService.isDetailsPage(true);
+    this.navigationService.isDetailsOrFormPage(true);
   }
 
   ngOnInit() {
     this.loading = true;
-    this.companiesService.list().subscribe((companies) => {
-      this.companiesList.length = 0;
-      companies.map((company) => this.companiesList.push(company.name));
-      this.loading = false;
+    this.companiesService.names().subscribe(( result: Array<IListField> ) => {
+      this.companiesList = result;
+      this.moviesService.genresList().subscribe((result: Array<string>) => {
+        this.genresList = result;
+        this.actorService.names().subscribe((result: Array<IListField>) => {
+          this.actorsList = result;
+          this.loading = false;
+        })
+      })
     });
 
-    /*this.actorService.list((actors) => {
-
-    })*/
   }
 
   get form() {
@@ -82,6 +88,7 @@ export class MovieAddComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.createForm.value);
     this.submitted = true;
 
     // stop here if form is invalid
@@ -98,11 +105,11 @@ export class MovieAddComponent implements OnInit {
     this.createForm.reset();
   }
 
-  changeCompany = (event: Event) => {
-    console.log()
-  };
-
   addValue(event: any) {
     console.log(event.target?.value);
+    console.log(this.createForm.value);
+    // Aqui voy a guardar el valor en lo seleccionado
+    this.createForm.controls['genres'].reset();
+    console.log(this.createForm.value);
   }
 }
