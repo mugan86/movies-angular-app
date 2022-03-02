@@ -149,10 +149,8 @@ export class MoviesService {
   }
 
   genresList = () : Observable<Array<string>> => {
-    const url = `${this.baseUrl}/movies`;
-
     return this.http
-      .get<IMovie[]>(url).pipe(
+      .get<IMovie[]>(`${this.baseUrl}/movies`).pipe(
         map((movies: IMovie[]) => {
           const genres: Array<string> = [];
           movies.map((movie: IMovie) => genres.push(...movie.genre));          
