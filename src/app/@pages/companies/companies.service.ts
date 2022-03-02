@@ -19,7 +19,7 @@ export class CompaniesService {
   item = (item: any): Observable<ICompany> =>
     this.httpClient.get<ICompany>(`${this.baseUrl}/companies/${item}`);
 
-  names = (): Observable<Array<IListField>> =>
+  names = (): Observable<IListField[]> =>
     this.list().pipe(
       map((company: ICompany[]) => 
       company.map((comp: ICompany) => {
@@ -29,14 +29,16 @@ export class CompaniesService {
       }))
     );
 
-    /*names = (): Observable<Array<IListField>> =>
-    this.list().pipe(
-      map((actors: IActor[]) =>
-        actors.map((actor: IActor) => { 
-          return {
-            id: actor.id, label: `${actor.first_name} ${actor.last_name}`
-          }
-        })
-      )
-    );*/
+  getWithMovies = () : Observable<{
+    id: number, name: string, movies: number[]
+  }[]> => {
+    return this.list().pipe(
+      map((company: ICompany[]) => 
+      company.map((comp: ICompany) => {
+        return {
+          id: comp.id || -1, name: comp.name, movies: comp.movies
+        }
+      }))
+    );
+  }
 }
