@@ -7,6 +7,7 @@
             "title": "Título",
             "poster": "Póster (url)",
             "genres": "Géneros",
+            "genresDescription": "Añade un género ó más",
             "actors": "Actores",
             "company": "Estudio",
             "companyDescription": "Selecciona un estudio",

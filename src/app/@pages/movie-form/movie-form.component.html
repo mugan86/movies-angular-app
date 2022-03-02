@@ -1,8 +1,6 @@
-<app-simple-loader *ngIf="loading"></app-simple-loader> Selected actors:
-{{ selectedActors | json }} Genres select: {{ genresSelect | json }}
-{{ form.actors.value | json }}
-{{ form.actors.value === null }}
+<app-simple-loader *ngIf="loading"></app-simple-loader>
 <form (ngSubmit)="onSubmit()" [formGroup]="createForm" *ngIf="!loading">
+  <!-- Título de la película 'title'-->
   <div class="mb-3">
     <label for="title" class="form-label">{{
       "forms.labels.title" | translate
@@ -24,6 +22,7 @@
       </div>
     </div>
   </div>
+  <!-- Imagen de la película 'poster'-->
   <div class="mb-3">
     <label for="poster" class="form-label">{{
       "forms.labels.poster" | translate
@@ -51,6 +50,7 @@
       </div>
     </div>
   </div>
+  <!-- Géneros de la película 'genre'-->
   <div class="mb-3">
     <label for="genre" class="form-label">{{
       "forms.labels.genres" | translate
@@ -59,9 +59,7 @@
       <input
         type="text"
         class="form-control"
-        placeholder="Recipient's username"
-        aria-label="Recipient's username"
-        aria-describedby="basic-addon2"
+        placeholder="{{ 'forms.labels.genresDescription' | translate }}"
         (keydown.enter)="addElement('genre')"
         formControlName="genre"
       />
@@ -75,13 +73,14 @@
       </div>
     </div>
 
-    <div id="tags-select">
+    <div id="hashtags">
       <app-select-value
         *ngFor="let genre of genresSelect"
         [label]="genre"
       ></app-select-value>
     </div>
   </div>
+  <!-- Actores / Actrices 'actors'-->
   <div class="mb-3">
     <label for="actors" class="form-label">{{
       "forms.labels.actors" | translate
@@ -98,6 +97,7 @@
       }}</ng-option>
     </ng-select>
   </div>
+  <!-- Estudio que ha producido la película 'company'-->
   <div class="mb-3">
     <label for="company" class="form-label">{{
       "forms.labels.company" | translate
@@ -125,7 +125,7 @@
       Debes de seleccionar un estudio
     </div>
   </div>
-
+  <!-- Año de estreno de la película 'year'-->
   <div class="mb-3">
     <label for="year" class="form-label">{{
       "forms.labels.releaseYear" | translate
@@ -185,6 +185,7 @@
       </div>
     </div>
   </div>
+  <!-- Puntuación 'imdbRating'-->
   <div class="mb-3">
     <label for="imdbRating" class="form-label">{{
       "forms.labels.ratings" | translate
