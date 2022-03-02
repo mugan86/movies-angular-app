@@ -16,9 +16,18 @@
         },
         "validationMessages": {
             "actorsRequired": "Debes de seleccionar por lo menos un actor o actriz",
+            "durationMaxValue": "Duración máxima es de 300 minutos",
+            "durationMinValue": "Duración mínima permitida es de 70 minutos",
+            "durationRequired": "Debes de introducir una duración entre 70 y 300 (incluidos)",
             "posterRequired": "Debes de añadir una dirección de la imagen de la película",
             "posterValidUrl": "Debes de añadir una URL correcta. P.j: \"http://dummyimage.com/400x600.png/dddddd/000000\"",
-            "titleRequired": "El título es necesario para poder crear la película"
+            "ratingMaxValue": "Puntuación máxima permitida es de 10. Introduce valores entre 1 y 10",
+            "ratingMinValue": "Puntuación mínima permitida es de 0. Introduce valores entre 1 y 10",
+            "ratingRequired": "Debes de introducir una puntuación de 1 a 10 (incluidos)",
+            "titleRequired": "El título es necesario para poder crear la película",
+            "yearMaxValue": "El año más alto que puedes introducir es el actual",
+            "yearMinValue": "El año más bajo que puedes introducir es el año 2000",
+            "yearRequired": "Debes de introducir el año de estreno entre el 2000 y el actual (incluidos)"
         }
     }
 }

@@ -1,6 +1,7 @@
-<app-simple-loader *ngIf="loading"></app-simple-loader>
-Selected actors: {{selectedActors | json}}
-Genres select: {{ genresSelect | json }}
+<app-simple-loader *ngIf="loading"></app-simple-loader> Selected actors:
+{{ selectedActors | json }} Genres select: {{ genresSelect | json }}
+{{ form.actors.value | json }}
+{{ form.actors.value === null }}
 <form (ngSubmit)="onSubmit()" [formGroup]="createForm" *ngIf="!loading">
   <div class="mb-3">
     <label for="title" class="form-label">{{
@@ -65,16 +66,21 @@ Genres select: {{ genresSelect | json }}
         formControlName="genres"
       />
       <div class="input-group-append">
-        <button class="btn bg-transparent btn__add" (click)="addElement('genres')">
+        <button
+          class="btn bg-transparent btn__add"
+          (click)="addElement('genres')"
+        >
           +
         </button>
       </div>
     </div>
-    
+
     <div id="tags-select">
-      <app-select-value *ngFor="let genre of genresSelect" [label]="genre"></app-select-value>
+      <app-select-value
+        *ngFor="let genre of genresSelect"
+        [label]="genre"
+      ></app-select-value>
     </div>
-    
   </div>
   <div class="mb-3">
     <label for="actors" class="form-label">{{
@@ -96,7 +102,10 @@ Genres select: {{ genresSelect | json }}
     <label for="company" class="form-label">{{
       "forms.labels.company" | translate
     }}</label>
-    <select class="custom-select mb-3 form-select" formControlName="company">
+    <select class="custom-select mb-3 form-select form-control" formControlName="company"
+    [ngClass]="{
+      'is-invalid': form.company.errors && form.company.touched && form.company.invalid
+    }">
       <option [ngValue]="null" disabled>
         {{ "forms.labels.companyDescription" | translate }}
       </option>
@@ -104,6 +113,13 @@ Genres select: {{ genresSelect | json }}
         {{ company.label }}
       </option>
     </select>
+    <div
+      *ngIf="form.company.errors"
+      class="invalid-feedback"
+      [ngStyle]="{ 'margin-top': '-11px' }"
+    >
+      Debes de seleccionar un estudio
+    </div>
   </div>
 
   <div class="mb-3">
@@ -119,7 +135,21 @@ Genres select: {{ genresSelect | json }}
       max="{{ currentYear }}"
       step="1"
       formControlName="year"
+      [ngClass]="{
+        'is-invalid': form.year.errors && form.year.touched && form.year.invalid
+      }"
     />
+    <div *ngIf="form.year.errors" class="invalid-feedback">
+      <div *ngIf="form.year.errors.max">
+        {{ "forms.validationMessages.yearMaxValue" | translate }}
+      </div>
+      <div *ngIf="form.year.errors.min">
+        {{ "forms.validationMessages.yearMinValue" | translate }}
+      </div>
+      <div *ngIf="form.year.errors?.required">
+        {{ "forms.validationMessages.yearRequired" | translate }}
+      </div>
+    </div>
   </div>
   <div class="mb-3">
     <label for="duration" class="form-label">{{
@@ -134,7 +164,22 @@ Genres select: {{ genresSelect | json }}
       max="300"
       step="1"
       formControlName="duration"
+      [ngClass]="{
+        'is-invalid':
+          form.duration.errors && form.duration.touched && form.duration.invalid
+      }"
     />
+    <div *ngIf="form.duration.errors" class="invalid-feedback">
+      <div *ngIf="form.duration.errors.max">
+        {{ "forms.validationMessages.durationMaxValue" | translate }}
+      </div>
+      <div *ngIf="form.duration.errors.min">
+        {{ "forms.validationMessages.durationMinValue" | translate }}
+      </div>
+      <div *ngIf="form.duration.errors?.required">
+        {{ "forms.validationMessages.durationRequired" | translate }}
+      </div>
+    </div>
   </div>
   <div class="mb-3">
     <label for="rating" class="form-label">{{
@@ -158,6 +203,9 @@ Genres select: {{ genresSelect | json }}
       </div>
       <div *ngIf="form.rating.errors.min">
         {{ "forms.validationMessages.ratingMinValue" | translate }}
+      </div>
+      <div *ngIf="form.rating.errors?.required">
+        {{ "forms.validationMessages.ratingRequired" | translate }}
       </div>
     </div>
   </div>

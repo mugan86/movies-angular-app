@@ -11,7 +11,7 @@ export const configcreateMovieForm = (actorsSelect: Array<number> = []) => {
     ],
     genres: [''],
     company: [null, [Validators.required]],
-    actors: [actorsSelect, [Validators.required]],
+    actors: [[]],
     year: [
       `${new Date().getFullYear()}`,
       [
