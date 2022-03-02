@@ -13,7 +13,7 @@ const routes: Routes = [
       },
       {
         path: 'movies/add',
-        loadChildren: () => import('./movie-add/movie-add.module').then(m => m.MovieAddModule)
+        loadChildren: () => import('./movie-form/movie-form.module').then(m => m.MovieFormModule)
       },
       {
         path: 'movies/:id',
