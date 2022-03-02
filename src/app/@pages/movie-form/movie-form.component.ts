@@ -1,3 +1,4 @@
+import { IMovie } from '@pages/movies/movie.interface';
 import { ICompany } from '@pages/companies/company.interface';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -27,7 +28,7 @@ export class MovieFormComponent implements OnInit {
     rating: 0,
     movies: [],
   };
-  selectedActors = [ 1, 5, 4 ]; // Usaré en actualización
+  selectedActors = [1, 5, 4]; // Usaré en actualización
   companiesList: Array<IListField> = [];
   actorsList: Array<IListField> = [];
   genresList: Array<string> = [];
@@ -51,22 +52,19 @@ export class MovieFormComponent implements OnInit {
     this.titleService.change('navbarSidebar.moviesAdd');
     this.navigationService.isDetailsOrFormPage(true);
 
-    this.createForm.get('actors')!.valueChanges.subscribe(val => {
+    this.createForm.get('actors')!.valueChanges.subscribe((val) => {
       // tu código
       this.selectedActors = val;
-    })
+    });
   }
 
   ngOnInit() {
     this.loading = true;
     this.companiesService.names().subscribe((result: Array<IListField>) => {
       this.companiesList = result;
-      this.moviesService.genresList().subscribe((result: Array<string>) => {
-        this.genresList = result;
-        this.actorService.names().subscribe((result: Array<IListField>) => {
-          this.actorsList = result;
-          this.loading = false;
-        });
+      this.actorService.names().subscribe((result: Array<IListField>) => {
+        this.actorsList = result;
+        this.loading = false;
       });
     });
   }
@@ -85,7 +83,15 @@ export class MovieFormComponent implements OnInit {
     }
 
     // display form values on success
-    alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.createForm.value, null, 4));
+    const formData: IMovie = this.createForm.value;
+    const company = formData.company;
+    delete formData['company'];
+    formData.genre = this.genresSelect;
+    console.log(company, formData);
+    this.moviesService.add(formData, company?.id || 0).subscribe((result) => {
+      console.log(result);
+      this.form.contros.reset();
+    });
   }
 
   onReset() {
@@ -94,20 +100,21 @@ export class MovieFormComponent implements OnInit {
   }
 
   addElement(elementLabel: string) {
-    if (![null, undefined, ''].includes(this.createForm.controls[elementLabel].value)) {
+    if (
+      ![null, undefined, ''].includes(
+        this.createForm.controls[elementLabel].value
+      )
+    ) {
       this.addGenresList(this.createForm.controls[elementLabel].value);
     }
-    
   }
 
   private addGenresList(genre: string) {
     if (!this.genresSelect.includes(genre)) {
-      console.log(genre);
-      this.genresSelect.push(genre)
-      console.log(this.genresSelect, this.genresList)
+      this.genresSelect.push(genre);
     }
     // Aqui voy a guardar el valor en lo seleccionado
-    this.createForm.controls['genres'].reset();
+    this.createForm.controls['genre'].reset();
     console.log(this.createForm.value);
   }
 }
