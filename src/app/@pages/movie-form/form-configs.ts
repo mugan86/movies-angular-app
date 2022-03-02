@@ -1,7 +1,6 @@
 import { Validators } from '@angular/forms';
 import { URL_VALIDATION_REGEX } from '@core/constants/regex';
 
-
 export const configcreateMovieForm = (actorsSelect: Array<number> = []) => {
   return {
     title: ['', Validators.required],
@@ -9,11 +8,11 @@ export const configcreateMovieForm = (actorsSelect: Array<number> = []) => {
       '',
       [Validators.required, Validators.pattern(URL_VALIDATION_REGEX)],
     ],
-    genres: [''],
+    genre: [''],
     company: [null, [Validators.required]],
     actors: [[]],
     year: [
-      `${new Date().getFullYear()}`,
+      new Date().getFullYear(),
       [
         Validators.required,
         Validators.max(new Date().getFullYear()),
@@ -21,10 +20,10 @@ export const configcreateMovieForm = (actorsSelect: Array<number> = []) => {
       ],
     ],
     duration: [
-      '120',
+      120,
       [Validators.required, Validators.max(300), Validators.min(70)],
     ],
-    rating: ['5', Validators.required],
+    imdbRating: [5, Validators.required],
   };
 };
 
