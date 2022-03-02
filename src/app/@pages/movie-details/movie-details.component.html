@@ -1,16 +1,5 @@
 <app-details-content-item *ngIf="loading$ | async"></app-details-content-item>
 <section class="container" *ngIf="(loading$ | async) === false">
-  <div class="row mb-2">
-    <div class="col-lg"></div>
-    <div class="col-lg-3">
-      <button type="button" class="btn btn-success me-2" (click)="updateItem()">
-        <i class="fa-solid fa-pencil"></i> Editar
-      </button>
-      <button type="button" class="btn btn-danger" (click)="deleteItem()">
-        <i class="fa-solid fa-trash-can"></i> Eliminar
-      </button>
-    </div>
-  </div>
   <div class="row">
     <div class="col-md-3">
       <img
@@ -62,11 +51,11 @@
       </div>
     </div>
   </div>
-  <div class="mobile">
-    <button type="button" class="btn btn-success btn-circle btn-xl me-2">
+  <div class="action-buttons float-end me-5">
+    <button type="button" class="btn btn-success action-buttons__circle__xl me-2" (click)="updateItem()">
       <i class="fa-solid fa-pencil"></i>
     </button>
-    <button type="button" class="btn btn-danger btn-circle btn-xl">
+    <button type="button" class="btn btn-danger action-buttons__circle__xl" (click)="deleteItem()">
       <i class="fa-solid fa-trash-can"></i>
     </button>
   </div>
