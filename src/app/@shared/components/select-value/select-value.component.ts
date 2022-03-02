@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-select-value',
@@ -7,4 +7,9 @@ import { Component, Input } from '@angular/core';
 })
 export class SelectValueComponent {
   @Input() label!: string;
+  @Input() hashtag: boolean = true;
+  @Output() labelRemove = new EventEmitter<string>();
+  remove() {
+    this.labelRemove.emit(this.label);
+  }
 }

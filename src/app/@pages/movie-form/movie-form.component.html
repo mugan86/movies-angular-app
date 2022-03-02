@@ -1,5 +1,5 @@
 <app-simple-loader *ngIf="loading"></app-simple-loader>
-Selected city object: {{selectedActors | json}}
+Selected actors: {{selectedActors | json}}
 Genres select: {{ genresSelect | json }}
 <form (ngSubmit)="onSubmit()" [formGroup]="createForm" *ngIf="!loading">
   <div class="mb-3">
@@ -61,17 +61,17 @@ Genres select: {{ genresSelect | json }}
         placeholder="Recipient's username"
         aria-label="Recipient's username"
         aria-describedby="basic-addon2"
-        (keydown.enter)="addGenre($event)"
+        (keydown.enter)="addElement('genres')"
         formControlName="genres"
       />
       <div class="input-group-append">
-        <button class="btn bg-transparent" style="border: 1px solid #212529">
+        <button class="btn bg-transparent btn__add" (click)="addElement('genres')">
           +
         </button>
       </div>
     </div>
     
-    <div id="genres">
+    <div id="tags-select">
       <app-select-value *ngFor="let genre of genresSelect" [label]="genre"></app-select-value>
     </div>
     

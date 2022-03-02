@@ -93,10 +93,14 @@ export class MovieFormComponent implements OnInit {
     this.createForm.reset();
   }
 
-  addGenre(event: any) {
-    console.log(event.target?.value);
-    const genre = event.target?.value;
-    console.log(genre, this.genresSelect.includes(genre));
+  addElement(elementLabel: string) {
+    if (![null, undefined, ''].includes(this.createForm.controls[elementLabel].value)) {
+      this.addGenresList(this.createForm.controls[elementLabel].value);
+    }
+    
+  }
+
+  private addGenresList(genre: string) {
     if (!this.genresSelect.includes(genre)) {
       console.log(genre);
       this.genresSelect.push(genre)
