@@ -1,0 +1,9 @@
+.movie__button-new {
+    position: fixed;
+    z-index: 1;
+    bottom: 4%;
+    right: 14%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
