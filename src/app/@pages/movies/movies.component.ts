@@ -16,7 +16,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
   private readonly unsubscribe$ = new Subject();
   movies$: Observable<IMovie[]>;
   loading$: Observable<boolean>;
-  errorData: Observable<{ type: string; status: number; message: string }>;
   constructor(
     private titleService: TitleService,
     private translate: TranslateService,
@@ -30,9 +29,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
     // Escuchando cambios
     this.movies$ = this.moviesService.movies.pipe(takeUntil(this.unsubscribe$));
     this.loading$ = this.moviesService.loadingData.pipe(
-      takeUntil(this.unsubscribe$)
-    );
-    this.errorData = this.moviesService.errorData.pipe(
       takeUntil(this.unsubscribe$)
     );
 
