@@ -1,7 +1,7 @@
 import { Validators } from '@angular/forms';
 import { URL_VALIDATION_REGEX } from '@core/constants/regex';
 
-export const configcreateMovieForm = (actorsSelect: Array<number> = []) => {
+export const configcreateMovieForm = () => {
   return {
     title: ['', Validators.required],
     poster: [

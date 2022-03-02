@@ -73,27 +73,6 @@ export class MovieFormComponent implements OnInit {
     return this.createForm.controls;
   }
 
-  onSubmit() {
-    console.log(this.createForm.value);
-    this.submitted = true;
-
-    // stop here if form is invalid
-    if (this.createForm.invalid) {
-      return;
-    }
-
-    // display form values on success
-    const formData: IMovie = this.createForm.value;
-    const company = formData.company;
-    delete formData['company'];
-    formData.genre = this.genresSelect;
-    console.log(company, formData);
-    this.moviesService.add(formData, company?.id || 0).subscribe((result) => {
-      console.log(result);
-      this.form.contros.reset();
-    });
-  }
-
   onReset() {
     this.submitted = false;
     this.createForm.reset();
@@ -116,5 +95,30 @@ export class MovieFormComponent implements OnInit {
     // Aqui voy a guardar el valor en lo seleccionado
     this.createForm.controls['genre'].reset();
     console.log(this.createForm.value);
+  }
+
+  resetForm() {
+    this.createForm = this.formBuilder.group(configcreateMovieForm());
+    this.genresSelect.length = 0;
+  }
+
+  onSubmit() {
+    console.log(this.createForm.value);
+    this.submitted = true;
+
+    // stop here if form is invalid
+    if (this.createForm.invalid) {
+      return;
+    }
+
+    // display form values on success
+    const formData: IMovie = this.createForm.value;
+    const company = formData.company;
+    delete formData['company'];
+    formData.genre = this.genresSelect;
+    this.moviesService.add(formData, company?.id || 0).subscribe(() => {
+      this.resetForm();
+      // Mostrar alerta para notificar que todo OK!
+    });
   }
 }
