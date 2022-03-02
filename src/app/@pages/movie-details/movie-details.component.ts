@@ -70,10 +70,11 @@ export class MovieDetailsComponent implements OnDestroy {
         'alerts.deleteContent',
         TypeAlertEnum.WARNING
       )
-      .then((result: any) => {
+      .then(async (result: any) => {
         if (result.isConfirmed) {
+          this.moviesService.loadingData$.next(true);
           this.moviesService.delete(this.movie!.id).subscribe((data) => {
-            if (data.status === undefined) {
+            if (data.status) {
               this.alertService
                 .dialogConfirm(
                   'Eliminado',
