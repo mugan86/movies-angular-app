@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { AlertService } from '@shared/services/alert.service';
 import { ICompany } from '@pages/companies/company.interface';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
@@ -15,6 +15,7 @@ import {
   switchMap,
   tap,
   throwError,
+  combineLatest,
 } from 'rxjs';
 import { IMovie } from './movie.interface';
 import { BASE_URL } from '@core/constants/api';
@@ -29,7 +30,7 @@ import { Router } from '@angular/router';
 export class MoviesService {
   private baseUrl = BASE_URL;
 
-  private loadingData$ = new BehaviorSubject<boolean>(true);
+  loadingData$ = new BehaviorSubject<boolean>(true);
   private movies$ = new BehaviorSubject<IMovie[]>([]);
   private movie$ = new Subject<IMovie>();
 
@@ -89,7 +90,7 @@ export class MoviesService {
               movie.actors = data.slice(1, data.length - 1);
               movie.company = data[data.length - 1].filter(
                 (company: ICompany) => {
-                  return company.movies.includes(movie.id);
+                  return company?.movies.includes(movie.id);
                 }
               )[0];
               return movie;
@@ -115,50 +116,79 @@ export class MoviesService {
 
   delete(id: number) {
     const url = `${this.baseUrl}/movies/${id}`;
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
+
+    const movie$ = this.http.get<IMovie>(url);
+    const movieDeleted$ = this.http.delete<null>(url);
+
+    return combineLatest([movie$, movieDeleted$]).pipe(
+      switchMap(([movie, _]) => {
+        return this.companiesService.list().pipe(
+          switchMap((companies) => {
+            const company = companies.find((c) => c.movies.includes(movie.id));
+
+            if (company) {
+              const movies = company.movies.filter((c) => c !== movie.id);
+              return this.editCompany(company.id, { ...company, movies });
+            }
+
+            return of(EMPTY);
+          })
+        );
       }),
-    };
-    return this.http.delete<IMovie>(url, httpOptions).pipe(
+      map(() => { return {
+        status: true
+      }}),
       catchError((error) => of(error))
     );
   }
 
-  add(movie: any, relationCompany: number) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
+  add(movie: any, companyId: number) {
+    const movie$: Observable<IMovie> = this.http.post<IMovie>(
+      `${this.baseUrl}/movies`,
+      movie
+    );
+
+    return movie$.pipe(
+      switchMap((movie) => {
+        return this.getCompanyById(companyId).pipe(
+          switchMap((company) => {
+            return this.editCompany(companyId, {
+              ...company,
+              movies: [...company?.movies, movie.id],
+            });
+          })
+        );
       }),
-    };
-    return this.http
-      .post<IMovie>(`${this.baseUrl}/movies`, movie, httpOptions)
-      .pipe(
-        switchMap((movie: IMovie) => {
-          return forkJoin([of(movie), this.companiesService.list()]).pipe(
-            map((movieAndCompany: any[]) => {
-              // 0: Movie / 1: CompaniesList
-              const dataVal: ICompany = movieAndCompany[1].filter(
-                (value: { id: number }) => {
-                  return value.id === relationCompany;
-                }
-              )[0];
-              dataVal.movies.push(movieAndCompany[0].id);
-              return dataVal;
-            }),
-            switchMap((company: ICompany) => {
-              return forkJoin([
-                this.http.put<ICompany>(
-                  `${this.baseUrl}/companies/${company.id}`,
-                  company,
-                  httpOptions
-                ),
-              ]);
-            })
-          );
-        }),
-        catchError((error) => of(error))
-      );
+      map(() => of({ status: 'ok' })),
+      catchError((error) => of(error))
+    );
+  }
+
+  getCompanyById(companyId: number) {
+    return this.http.get<ICompany>(`${this.baseUrl}/companies/${companyId}`);
+  }
+
+  editCompany(companyId: number, company: ICompany) {
+    return this.http.put<ICompany>(
+      `${this.baseUrl}/companies/${companyId}`,
+      company
+    );
+  }
+
+  formListElements() {
+    const companies$ = this.companiesService.names();
+    const actor$ = this.actorsService.names();
+
+    // 
+    // return combineLatest([companies$, actor$]).pipe((
+    //   map(([companiesFields, actorFields]) => of({companiesFields, actorFields}))
+    // ))
+
+    return forkJoin({
+      companies: companies$,
+      actor: actor$
+    })
+
   }
 
   reset = () => {
