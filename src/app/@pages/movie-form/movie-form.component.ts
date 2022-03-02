@@ -1,14 +1,13 @@
+import { AlertService } from '@shared/services/alert.service';
 import { IMovie } from '@pages/movies/movie.interface';
-import { ICompany } from '@pages/companies/company.interface';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NavigationService, TitleService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
-import { CompaniesService } from '@pages/companies/companies.service';
-import { ActorService } from '@pages/actors/actor.service';
 import { MoviesService } from '@pages/movies/movies.service';
 import { IListField } from '@core/interfaces/form.interface';
 import { configcreateMovieForm } from './form-configs';
+import { TypeAlertEnum } from '@core/constants/alerts';
 
 @Component({
   selector: 'app-movie-form',
@@ -20,15 +19,7 @@ export class MovieFormComponent implements OnInit {
   createForm: FormGroup;
   submitted: boolean = false;
   currentYear = new Date().getFullYear();
-  companySelect: ICompany = {
-    name: '',
-    country: '',
-    createYear: -1,
-    employees: -1,
-    rating: 0,
-    movies: [],
-  };
-  selectedActors = [1, 5, 4]; // Usaré en actualización
+  selectedActors = []; // Usaré en actualización
   companiesList: Array<IListField> = [];
   actorsList: Array<IListField> = [];
   genresList: Array<string> = [];
@@ -38,9 +29,8 @@ export class MovieFormComponent implements OnInit {
     private titleService: TitleService,
     private translate: TranslateService,
     private navigationService: NavigationService,
-    private companiesService: CompaniesService,
-    private actorService: ActorService,
-    private moviesService: MoviesService
+    private moviesService: MoviesService,
+    private alertService: AlertService
   ) {
     // Aquí para la edición tendré que añadir de coger el objeto seleccionado
     this.createForm = this.formBuilder.group(configcreateMovieForm());
@@ -60,12 +50,10 @@ export class MovieFormComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.companiesService.names().subscribe((result: Array<IListField>) => {
-      this.companiesList = result;
-      this.actorService.names().subscribe((result: Array<IListField>) => {
-        this.actorsList = result;
-        this.loading = false;
-      });
+    this.moviesService.formListElements().subscribe((data) => {
+      this.actorsList = data.actor;
+      this.companiesList = data.companies;
+      this.loading = false;
     });
   }
 
@@ -100,6 +88,8 @@ export class MovieFormComponent implements OnInit {
   resetForm() {
     this.createForm = this.formBuilder.group(configcreateMovieForm());
     this.genresSelect.length = 0;
+    this.actorsList.length = 0;
+    this.selectedActors.length = 0;
   }
 
   onSubmit() {
@@ -112,13 +102,17 @@ export class MovieFormComponent implements OnInit {
     }
 
     // display form values on success
-    const formData: IMovie = this.createForm.value;
-    const company = formData.company;
-    delete formData['company'];
-    formData.genre = this.genresSelect;
-    this.moviesService.add(formData, company?.id || 0).subscribe(() => {
+    const movieData: IMovie = this.createForm.value;
+    const company = movieData.company;
+    delete movieData['company'];
+    movieData.genre = this.genresSelect;
+    this.loading = true;
+    this.moviesService.add(movieData, company!.id).subscribe((data) => {
       this.resetForm();
+      console.log(data)
+      this.loading = false;
       // Mostrar alerta para notificar que todo OK!
+      this.alertService.dialogConfirm('cccc', '333', TypeAlertEnum.SUCCESS);
     });
   }
 }
