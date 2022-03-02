@@ -52,7 +52,7 @@
     </div>
   </div>
   <div class="mb-3">
-    <label for="genres" class="form-label">{{
+    <label for="genre" class="form-label">{{
       "forms.labels.genres" | translate
     }}</label>
     <div class="input-group">
@@ -62,13 +62,13 @@
         placeholder="Recipient's username"
         aria-label="Recipient's username"
         aria-describedby="basic-addon2"
-        (keydown.enter)="addElement('genres')"
-        formControlName="genres"
+        (keydown.enter)="addElement('genre')"
+        formControlName="genre"
       />
       <div class="input-group-append">
         <button
           class="btn bg-transparent btn__add"
-          (click)="addElement('genres')"
+          (click)="addElement('genre')"
         >
           +
         </button>
@@ -102,10 +102,14 @@
     <label for="company" class="form-label">{{
       "forms.labels.company" | translate
     }}</label>
-    <select class="custom-select mb-3 form-select form-control" formControlName="company"
-    [ngClass]="{
-      'is-invalid': form.company.errors && form.company.touched && form.company.invalid
-    }">
+    <select
+      class="custom-select mb-3 form-select form-control"
+      formControlName="company"
+      [ngClass]="{
+        'is-invalid':
+          form.company.errors && form.company.touched && form.company.invalid
+      }"
+    >
       <option [ngValue]="null" disabled>
         {{ "forms.labels.companyDescription" | translate }}
       </option>
@@ -182,7 +186,7 @@
     </div>
   </div>
   <div class="mb-3">
-    <label for="rating" class="form-label">{{
+    <label for="imdbRating" class="form-label">{{
       "forms.labels.ratings" | translate
     }}</label>
     <input
@@ -191,20 +195,22 @@
       min="1"
       max="10"
       step="1"
-      formControlName="rating"
+      formControlName="imdbRating"
       [ngClass]="{
         'is-invalid':
-          form.rating.errors && form.rating.touched && form.rating.invalid
+          form.imdbRating.errors &&
+          form.imdbRating.touched &&
+          form.imdbRating.invalid
       }"
     />
-    <div *ngIf="form.rating.errors" class="invalid-feedback">
-      <div *ngIf="form.rating.errors.max">
+    <div *ngIf="form.imdbRating.errors" class="invalid-feedback">
+      <div *ngIf="form.imdbRating.errors.max">
         {{ "forms.validationMessages.ratingMaxValue" | translate }}
       </div>
-      <div *ngIf="form.rating.errors.min">
+      <div *ngIf="form.imdbRating.errors.min">
         {{ "forms.validationMessages.ratingMinValue" | translate }}
       </div>
-      <div *ngIf="form.rating.errors?.required">
+      <div *ngIf="form.imdbRating.errors?.required">
         {{ "forms.validationMessages.ratingRequired" | translate }}
       </div>
     </div>
