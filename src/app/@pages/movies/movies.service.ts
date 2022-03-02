@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { AlertService } from '@shared/services/alert.service';
 import { ICompany } from '@pages/companies/company.interface';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
@@ -30,15 +30,6 @@ export class MoviesService {
   private baseUrl = BASE_URL;
 
   private loadingData$ = new BehaviorSubject<boolean>(true);
-  private errorData$ = new BehaviorSubject<{
-    type: string;
-    status: number;
-    message: string;
-  }>({
-    status: -1,
-    message: '',
-    type: '-',
-  });
   private movies$ = new BehaviorSubject<IMovie[]>([]);
   private movie$ = new Subject<IMovie>();
 
@@ -52,10 +43,6 @@ export class MoviesService {
 
   get loadingData() {
     return this.loadingData$.asObservable();
-  }
-
-  get errorData() {
-    return this.errorData$.asObservable();
   }
 
   get movies() {
@@ -128,10 +115,50 @@ export class MoviesService {
 
   delete(id: number) {
     const url = `${this.baseUrl}/movies/${id}`;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.http.delete<IMovie>(url, httpOptions).pipe(
+      catchError((error) => of(error))
+    );
+  }
 
+  add(movie: any, relationCompany: number) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
     return this.http
-      .delete<IMovie[]>(url)
-      .pipe(catchError((error) => of(error)));
+      .post<IMovie>(`${this.baseUrl}/movies`, movie, httpOptions)
+      .pipe(
+        switchMap((movie: IMovie) => {
+          return forkJoin([of(movie), this.companiesService.list()]).pipe(
+            map((movieAndCompany: any[]) => {
+              // 0: Movie / 1: CompaniesList
+              const dataVal: ICompany = movieAndCompany[1].filter(
+                (value: { id: number }) => {
+                  return value.id === relationCompany;
+                }
+              )[0];
+              dataVal.movies.push(movieAndCompany[0].id);
+              return dataVal;
+            }),
+            switchMap((company: ICompany) => {
+              return forkJoin([
+                this.http.put<ICompany>(
+                  `${this.baseUrl}/companies/${company.id}`,
+                  company,
+                  httpOptions
+                ),
+              ]);
+            })
+          );
+        }),
+        catchError((error) => of(error))
+      );
   }
 
   reset = () => {
@@ -146,16 +173,5 @@ export class MoviesService {
   handleError(error: { type: string; status: number; message: string }) {
     console.log(error);
     return throwError(() => EMPTY);
-  }
-
-  genresList = () : Observable<Array<string>> => {
-    return this.http
-      .get<IMovie[]>(`${this.baseUrl}/movies`).pipe(
-        map((movies: IMovie[]) => {
-          const genres: Array<string> = [];
-          movies.map((movie: IMovie) => genres.push(...movie.genre));          
-          return Array.from(new Set(genres));
-        }),
-      );
   }
 }
