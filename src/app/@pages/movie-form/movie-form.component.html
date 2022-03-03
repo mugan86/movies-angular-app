@@ -1,5 +1,11 @@
 <app-simple-loader *ngIf="loading"></app-simple-loader>
-<form (ngSubmit)="onSubmit()" [formGroup]="createForm" *ngIf="!loading">
+<form
+  (ngSubmit)="onSubmit()"
+  [formGroup]="createForm"
+  *ngIf="!loading"
+  (keydown.enter)="$event.preventDefault()"
+  (keydown.shift.enter)="$event.preventDefault()"
+>
   <!-- Título de la película 'title'-->
   <div class="mb-3">
     <label for="title" class="form-label">{{
