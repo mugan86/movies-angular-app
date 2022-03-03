@@ -31,10 +31,6 @@ export class MoviesService {
   list() {
     const url = `${this.baseUrl}/movies`;
 
-    this.companiesService
-      .itemByMovie(11)
-      .subscribe((data) => console.log(data));
-
     return this.http.get<IMovie[]>(url).pipe(
       map((movies) => {
         return { status: true, message: '', movies };
