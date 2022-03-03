@@ -19,7 +19,7 @@ import { ParamMap, ActivatedRoute } from '@angular/router';
 })
 export class MovieFormComponent implements OnDestroy {
   private readonly unsubscribe$ = new Subject();
-  createItem : boolean = true;
+  createItem: boolean = true;
   loading: boolean = true;
   createForm!: FormGroup;
   submitted: boolean = false;
@@ -83,8 +83,6 @@ export class MovieFormComponent implements OnDestroy {
                 this.loading = false;
 
                 this.titleService.change(result.movie!.title);
-
-                
               } else if (!result.status) {
                 if (result.message.status === 404) {
                   this.alertService
@@ -98,11 +96,15 @@ export class MovieFormComponent implements OnDestroy {
                     });
                   return;
                 }
-                this.alertService.dialogConfirm(
-                  'alerts.communicationOffTitle',
-                  'alerts.communicationOffDescription',
-                  TypeAlertEnum.ERROR
-                );
+                this.alertService
+                  .dialogConfirm(
+                    'alerts.communicationOffTitle',
+                    'alerts.communicationOffDescription',
+                    TypeAlertEnum.ERROR
+                  )
+                  .then(() => {
+                    this.navigationService.goTo('');
+                  });
               }
             });
         });
@@ -113,7 +115,6 @@ export class MovieFormComponent implements OnDestroy {
       this.titleService.change('navbarSidebar.moviesAdd');
 
       this.loading = false;
-            
     }
   }
 
@@ -125,7 +126,7 @@ export class MovieFormComponent implements OnDestroy {
     this.createForm.get('title')!.valueChanges.subscribe((val) => {
       this.loading = false;
     });
-  }
+  };
 
   onReset() {
     this.submitted = false;
@@ -152,7 +153,7 @@ export class MovieFormComponent implements OnDestroy {
   }
 
   resetForm() {
-    if (window.location.hash.indexOf('edit') > -1 ) {
+    if (window.location.hash.indexOf('edit') > -1) {
       this.navigationService.goTo('/movies/details/' + this.movie?.id);
     }
     this.createForm = this.formBuilder.group(configcreateMovieForm());

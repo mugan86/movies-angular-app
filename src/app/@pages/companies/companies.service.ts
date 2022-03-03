@@ -16,29 +16,45 @@ export class CompaniesService {
   list = (): Observable<ICompany[]> =>
     this.httpClient.get<ICompany[]>(`${this.baseUrl}/companies`);
 
-  item = (item: any): Observable<ICompany> =>
-    this.httpClient.get<ICompany>(`${this.baseUrl}/companies/${item}`);
+  item = (id: any): Observable<ICompany> =>
+    this.httpClient.get<ICompany>(`${this.baseUrl}/companies/${id}`);
+
+  edit = (id: number, company: ICompany) => {
+    return this.httpClient.put<ICompany>(
+      `${this.baseUrl}/companies/${id}`,
+      company
+    );
+  };
 
   names = (): Observable<IListField[]> =>
     this.list().pipe(
-      map((company: ICompany[]) => 
-      company.map((comp: ICompany) => {
-        return {
-          id: comp.id, label: comp.name
-        }
-      }))
+      map((company: ICompany[]) =>
+        company.map((comp: ICompany) => {
+          return {
+            id: comp.id,
+            label: comp.name,
+          };
+        })
+      )
     );
 
-  getWithMovies = () : Observable<{
-    id: number, name: string, movies: number[]
-  }[]> => {
+  getWithMovies = (): Observable<
+    {
+      id: number;
+      name: string;
+      movies: number[];
+    }[]
+  > => {
     return this.list().pipe(
-      map((company: ICompany[]) => 
-      company.map((comp: ICompany) => {
-        return {
-          id: comp.id || -1, name: comp.name, movies: comp.movies
-        }
-      }))
+      map((company: ICompany[]) =>
+        company.map((comp: ICompany) => {
+          return {
+            id: comp.id || -1,
+            name: comp.name,
+            movies: comp.movies,
+          };
+        })
+      )
     );
-  }
+  };
 }
