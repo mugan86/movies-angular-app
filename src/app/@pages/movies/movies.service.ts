@@ -31,6 +31,8 @@ export class MoviesService {
   list() {
     const url = `${this.baseUrl}/movies`;
 
+    this.companiesService.itemByMovie(11).subscribe((data) => console.log(data));
+
     return this.http.get<IMovie[]>(url).pipe(
       map((movies) => {
         return { status: true, message: '', movies };
@@ -124,12 +126,66 @@ export class MoviesService {
     );
 
     return movie$.pipe(
-      switchMap((movie) => {
+      
+      switchMap((movie: IMovie) => {
+        return forkJoin([
+          of(movie),
+          this.companiesService.itemByMovie(movieId),
+          this.companiesService.assignMovieInCompany(movie, companyId),
+        ]).pipe(
+          map((data: any[]) => {
+            console.log(data)
+            const movie = data [0];
+            let oldRelation: ICompany = data[1];
+            const newRelation: ICompany = data[2];
+            if (oldRelation.id !== newRelation.id) {
+              const moviesOldCompany = oldRelation.movies;
+              const removeOldRelation = moviesOldCompany.filter((value) => value !== movieId)
+              oldRelation.movies = removeOldRelation;
+            }
+            
+            console.log(oldRelation, newRelation);
+            return { movie, old: oldRelation, newRelation };
+          }),
+          switchMap(({movie, old, newRelation}) => {
+            return forkJoin({
+              status: of(true),
+              movie: of(movie),
+              old: (old.id !== newRelation.id) ? this.companiesService.edit(old.id, old) : of(old),
+              new: of(newRelation),
+            })
+          })
+        );
+      }),
+     /*switchMap((oldRelation: ICompany, newRelation: ICompany) => {
+        return forkJoin([
+          of(movie),
+          this.companiesService.itemByMovie(movieId),
+          this.companiesService.assignMovieInCompany(movie, companyId),
+        ]).pipe(
+          map((data: any[]) => {
+            console.log(data)
+            const movie = data [0];
+            const oldRelation: ICompany = data[1];
+            const newRelation: ICompany = data[2];
+            oldRelation.movies.slice(oldRelation.movies.indexOf(movieId), 1);
+            newRelation.movies.push(movieId);
+            console.log(oldRelation, newRelation);
+            return { oldRelation, newRelation };
+          })
+        );
+      }),*/
+      /*switchMap((movie) => {
+        return of({ movie, lastCompany: 
+          this.companiesService.itemByMovie(11).pipe(map((item) => item.company))})
+      }),
+      switchMap(({movie, lastCompany}) => {
+        console.log(lastCompany)
         return this.companiesService.assignMovieInCompany(movie, companyId);
       }),
       map(() => {
         return { status: true, movie, message: '' };
-      }),
+      }),*/
       catchError((error) => of(error))
     );
   }
