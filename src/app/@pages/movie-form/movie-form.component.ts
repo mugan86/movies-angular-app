@@ -10,6 +10,7 @@ import { configcreateMovieForm } from './form-configs';
 import { TypeAlertEnum } from '@core/constants/alerts';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { Subject } from 'rxjs/internal/Subject';
+import { ParamMap, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-movie-form',
@@ -27,25 +28,67 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   actorsList: Array<IListField> = [];
   genresList: Array<string> = [];
   genresSelect: Array<string> = [];
+  movie: IMovie | undefined = undefined;
   constructor(
     private formBuilder: FormBuilder,
     private titleService: TitleService,
     private translate: TranslateService,
     private navigationService: NavigationService,
     private moviesService: MoviesService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private route: ActivatedRoute
   ) {
     // Aquí para la edición tendré que añadir de coger el objeto seleccionado
     this.createForm = this.formBuilder.group(configcreateMovieForm());
 
     this.translate.setDefaultLang('es');
-    this.titleService.change('navbarSidebar.moviesAdd');
+    
     this.navigationService.isDetailsOrFormPage(true);
 
-    this.createForm.get('actors')!.valueChanges.subscribe((val) => {
-      // tu código
-      this.selectedActors = val;
-    });
+    if (window.location.hash.indexOf('edit') > -1) {
+      this.route.paramMap
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((params: ParamMap) => {
+          this.moviesService
+          .getItem(Number(params.get('id')))
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(async (result) => {
+            if (result.status) {
+              this.movie = result.movie;
+              this.titleService.change(result.movie!.title);
+              
+              this.loading = false;
+            } else if (!result.status) {
+              if (result.message.status === 404) {
+                this.alertService
+                  .dialogConfirm(
+                    'alerts.infoNotFound',
+                    'alerts.infoNotFoundDescription',
+                    TypeAlertEnum.ERROR
+                  )
+                  .then(() => {
+                    // this.navigateTo('');
+                  });
+                return;
+              }
+              this.alertService.dialogConfirm(
+                'alerts.communicationOffTitle',
+                'alerts.communicationOffDescription',
+                TypeAlertEnum.ERROR
+              );
+            }
+          });
+        });
+    } else {
+      // Nueva película
+      this.titleService.change('navbarSidebar.moviesAdd');
+      this.createForm.get('actors')!.valueChanges.subscribe((val) => {
+        // tu código
+        this.selectedActors = val;
+      });
+    }
+
+    
   }
 
   ngOnInit() {
