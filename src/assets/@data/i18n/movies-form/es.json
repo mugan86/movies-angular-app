@@ -1,7 +1,8 @@
 {
     "forms": {
         "buttons": {
-            "submit": "Crear película"
+            "add": "Crear película",
+            "update": "Actualizar película"
         },
         "labels": {
             "title": "Título",

@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from '@core/constants/api';
 import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { IListField } from '@core/interfaces/form.interface';
+import { IMovie } from '@pages/movies/movie.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -16,29 +17,65 @@ export class CompaniesService {
   list = (): Observable<ICompany[]> =>
     this.httpClient.get<ICompany[]>(`${this.baseUrl}/companies`);
 
-  item = (item: any): Observable<ICompany> =>
-    this.httpClient.get<ICompany>(`${this.baseUrl}/companies/${item}`);
+  item = (id: number) =>
+    this.httpClient.get<ICompany>(`${this.baseUrl}/companies/${id}`);
+
+  edit = (id: number, company: ICompany) => {
+    return this.httpClient.put<ICompany>(
+      `${this.baseUrl}/companies/${id}`,
+      company
+    );
+  };
+
+  itemByMovie = (movieId: number): Observable<ICompany | undefined> => {
+    return this.list().pipe(
+      map((companies) =>
+        companies.find((company) => company.movies.includes(movieId))
+      ),
+      map((company) => company)
+    );
+  };
+
+  assignMovieInCompany = (movie: IMovie, companyId: number) => {
+    return this.item(companyId).pipe(
+      switchMap((company) => {
+        return this.edit(companyId, {
+          ...company,
+          movies: Array.from(new Set([...company?.movies, movie.id])) as [],
+        });
+      })
+    );
+  };
 
   names = (): Observable<IListField[]> =>
     this.list().pipe(
-      map((company: ICompany[]) => 
-      company.map((comp: ICompany) => {
-        return {
-          id: comp.id, label: comp.name
-        }
-      }))
+      map((company: ICompany[]) =>
+        company.map((comp: ICompany) => {
+          return {
+            id: comp.id,
+            label: comp.name,
+          };
+        })
+      )
     );
 
-  getWithMovies = () : Observable<{
-    id: number, name: string, movies: number[]
-  }[]> => {
+  getWithMovies = (): Observable<
+    {
+      id: number;
+      name: string;
+      movies: number[];
+    }[]
+  > => {
     return this.list().pipe(
-      map((company: ICompany[]) => 
-      company.map((comp: ICompany) => {
-        return {
-          id: comp.id || -1, name: comp.name, movies: comp.movies
-        }
-      }))
+      map((company: ICompany[]) =>
+        company.map((comp: ICompany) => {
+          return {
+            id: comp.id || -1,
+            name: comp.name,
+            movies: comp.movies,
+          };
+        })
+      )
     );
-  }
+  };
 }

@@ -1,6 +1,6 @@
 import { AlertService } from '@shared/services/alert.service';
 import { IMovie } from '@pages/movies/movie.interface';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NavigationService, TitleService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,16 +10,18 @@ import { configcreateMovieForm } from './form-configs';
 import { TypeAlertEnum } from '@core/constants/alerts';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { Subject } from 'rxjs/internal/Subject';
+import { ParamMap, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-movie-form',
   templateUrl: './movie-form.component.html',
   styleUrls: ['./movie-form.component.css'],
 })
-export class MovieFormComponent implements OnInit, OnDestroy {
+export class MovieFormComponent implements OnDestroy {
   private readonly unsubscribe$ = new Subject();
+  createItem: boolean = true;
   loading: boolean = true;
-  createForm: FormGroup;
+  createForm!: FormGroup;
   submitted: boolean = false;
   currentYear = new Date().getFullYear();
   selectedActors = []; // Usaré en actualización
@@ -27,28 +29,16 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   actorsList: Array<IListField> = [];
   genresList: Array<string> = [];
   genresSelect: Array<string> = [];
+  movie: IMovie | undefined = undefined;
   constructor(
     private formBuilder: FormBuilder,
     private titleService: TitleService,
     private translate: TranslateService,
     private navigationService: NavigationService,
     private moviesService: MoviesService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private route: ActivatedRoute
   ) {
-    // Aquí para la edición tendré que añadir de coger el objeto seleccionado
-    this.createForm = this.formBuilder.group(configcreateMovieForm());
-
-    this.translate.setDefaultLang('es');
-    this.titleService.change('navbarSidebar.moviesAdd');
-    this.navigationService.isDetailsOrFormPage(true);
-
-    this.createForm.get('actors')!.valueChanges.subscribe((val) => {
-      // tu código
-      this.selectedActors = val;
-    });
-  }
-
-  ngOnInit() {
     this.loading = true;
     this.moviesService
       .formListElements()
@@ -56,8 +46,77 @@ export class MovieFormComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.actorsList = data.actor;
         this.companiesList = data.companies;
-        this.loading = false;
       });
+    this.translate.setDefaultLang('es');
+
+    this.navigationService.isDetailsOrFormPage(true);
+
+    if (window.location.hash.indexOf('edit') > -1) {
+      this.createItem = false;
+      this.route.paramMap
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((params: ParamMap) => {
+          this.moviesService
+            .get(Number(params.get('id')))
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(async (result) => {
+              if (result.status) {
+                this.movie = result.movie;
+                console.log(this.movie);
+                // Aquí para la edición tendré que añadir de coger el objeto seleccionado
+                this.genresSelect = this.movie?.genre || [];
+                this.createForm = this.formBuilder.group(
+                  configcreateMovieForm([
+                    this.movie?.title,
+                    this.movie?.poster,
+                    [],
+                    {
+                      id: this.movie?.company!.id,
+                      label: this.movie?.company!.name,
+                    },
+                    this.movie?.actors.map((actor) => actor.id),
+                    this.movie?.year,
+                    this.movie?.duration,
+                    this.movie?.imdbRating,
+                  ])
+                );
+
+                this.loading = false;
+
+                this.titleService.change(result.movie!.title);
+              } else if (!result.status) {
+                if (result.message.status === 404) {
+                  this.alertService
+                    .dialogConfirm(
+                      'alerts.infoNotFound',
+                      'alerts.infoNotFoundDescription',
+                      TypeAlertEnum.ERROR
+                    )
+                    .then(() => {
+                      this.navigationService.goTo('');
+                    });
+                  return;
+                }
+                this.alertService
+                  .dialogConfirm(
+                    'alerts.communicationOffTitle',
+                    'alerts.communicationOffDescription',
+                    TypeAlertEnum.ERROR
+                  )
+                  .then(() => {
+                    this.navigationService.goTo('');
+                  });
+              }
+            });
+        });
+    } else {
+      // Aquí para la edición tendré que añadir de coger el objeto seleccionado
+      this.createForm = this.formBuilder.group(configcreateMovieForm());
+      // Nueva película
+      this.titleService.change('navbarSidebar.moviesAdd');
+
+      this.loading = false;
+    }
   }
 
   get form() {
@@ -80,7 +139,11 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   }
 
   private addGenresList(genre: string) {
-    if (!this.genresSelect.includes(genre)) {
+    if (
+      !this.genresSelect
+        .map((genre) => genre.toLowerCase())
+        .includes(genre.toLowerCase())
+    ) {
       this.genresSelect.push(genre);
     }
     // Aqui voy a guardar el valor en lo seleccionado
@@ -89,6 +152,9 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   }
 
   resetForm() {
+    if (window.location.hash.indexOf('edit') > -1) {
+      this.navigationService.goTo('/movies/details/' + this.movie!!.id);
+    }
     this.createForm = this.formBuilder.group(configcreateMovieForm());
     this.genresSelect.length = 0;
     this.actorsList.length = 0;
@@ -110,18 +176,39 @@ export class MovieFormComponent implements OnInit, OnDestroy {
     delete movieData['company'];
     movieData.genre = this.genresSelect;
     this.loading = true;
+    if (this.createItem) {
+      this.moviesService
+        .add(movieData, company!.id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data) => {
+          console.log(data);
+          this.resetForm();
+          this.loading = false;
+          // Mostrar alerta para notificar que todo OK!
+          this.alertService.dialogConfirm('cccc', '333', TypeAlertEnum.SUCCESS);
+        });
+      return;
+    }
+    console.log(movieData, company?.id, this.movie!.id);
+    // Actualizar
     this.moviesService
-      .add(movieData, company!.id)
+      .update(movieData, company!.id, this.movie!.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
+        console.log(data);
         this.resetForm();
         this.loading = false;
         // Mostrar alerta para notificar que todo OK!
-        this.alertService.dialogConfirm('cccc', '333', TypeAlertEnum.SUCCESS);
+        this.alertService.dialogConfirm(
+          'Actualizado',
+          '333',
+          TypeAlertEnum.SUCCESS
+        );
       });
   }
 
   ngOnDestroy(): void {
+    this.titleService.change('');
     this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
   }

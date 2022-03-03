@@ -1,5 +1,11 @@
 <app-simple-loader *ngIf="loading"></app-simple-loader>
-<form (ngSubmit)="onSubmit()" [formGroup]="createForm" *ngIf="!loading">
+<form
+  (ngSubmit)="onSubmit()"
+  [formGroup]="createForm"
+  *ngIf="!loading"
+  (keydown.enter)="$event.preventDefault()"
+  (keydown.shift.enter)="$event.preventDefault()"
+>
   <!-- Título de la película 'title'-->
   <div class="mb-3">
     <label for="title" class="form-label">{{
@@ -110,12 +116,28 @@
           form.company.errors && form.company.touched && form.company.invalid
       }"
     >
+      <!-- Placeholder -->
       <option [ngValue]="null" disabled>
         {{ "forms.labels.companyDescription" | translate }}
       </option>
-      <option *ngFor="let company of companiesList" [ngValue]="company">
-        {{ company.label }}
-      </option>
+      <ng-container *ngFor="let company of companiesList">
+        <ng-container *ngIf="createItem">
+          <option [ngValue]="company">{{ company.label }}</option>
+        </ng-container>
+        <!-- Edición de una película -->
+        <ng-container *ngIf="!createItem">
+          <ng-container *ngIf="movie?.company?.id === company.id">
+            <!-- Opción de la selección -->
+            <option [defaultSelected]="true" [value]="company">
+              {{ company.label }}
+            </option>
+          </ng-container>
+          <!-- Las otras opciones -->
+          <ng-container *ngIf="movie?.company?.id !== company.id">
+            <option [ngValue]="company">{{ company.label }}</option>
+          </ng-container>
+        </ng-container>
+      </ng-container>
     </select>
     <div
       *ngIf="form.company.errors"
@@ -217,6 +239,7 @@
     </div>
   </div>
   <button type="submit" class="btn btn-primary">
-    {{ "forms.buttons.submit" | translate }}
+    <span *ngIf="createItem">{{ "forms.buttons.add" | translate }}</span>
+    <span *ngIf="!createItem">{{ "forms.buttons.update" | translate }}</span>
   </button>
 </form>

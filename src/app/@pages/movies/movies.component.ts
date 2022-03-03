@@ -29,7 +29,7 @@ export class MoviesComponent implements OnDestroy {
     this.translate.setDefaultLang('es');
 
     this.moviesService
-      .getAll()
+      .list()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((result) => {
         console.log(result);
@@ -53,6 +53,7 @@ export class MoviesComponent implements OnDestroy {
   add = () => this.router.navigateByUrl('/movies/add');
 
   ngOnDestroy(): void {
+    this.titleService.change('');
     this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
   }

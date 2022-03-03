@@ -35,14 +35,13 @@ export class MovieDetailsComponent implements OnDestroy {
     private navigationService: NavigationService,
     private screenService: ScreenService
   ) {
-    // this.titleService.change(menuItems[0].label);
     this.translate.setDefaultLang('es');
     this.titleService.change('');
     this.route.paramMap
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((params: ParamMap) => {
         this.moviesService
-          .getItem(Number(params.get('id')))
+          .get(Number(params.get('id')))
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe((result) => {
             if (result.status) {
@@ -126,10 +125,11 @@ export class MovieDetailsComponent implements OnDestroy {
   };
 
   async updateItem() {
-    console.log(this.movie);
+    this.navigationService.goTo(`/movies/edit/${this.movie?.id}`);
   }
 
   ngOnDestroy(): void {
+    this.titleService.change('');
     this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
   }
