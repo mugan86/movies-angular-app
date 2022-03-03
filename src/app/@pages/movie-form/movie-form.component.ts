@@ -57,11 +57,12 @@ export class MovieFormComponent implements OnDestroy {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((params: ParamMap) => {
           this.moviesService
-            .getItem(Number(params.get('id')))
+            .get(Number(params.get('id')))
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(async (result) => {
               if (result.status) {
                 this.movie = result.movie;
+                console.log(this.movie);
                 // Aquí para la edición tendré que añadir de coger el objeto seleccionado
                 this.genresSelect = this.movie?.genre || [];
                 this.createForm = this.formBuilder.group(
@@ -122,12 +123,6 @@ export class MovieFormComponent implements OnDestroy {
     return this.createForm.controls;
   }
 
-  detectChangesAndShow = () => {
-    this.createForm.get('title')!.valueChanges.subscribe((val) => {
-      this.loading = false;
-    });
-  };
-
   onReset() {
     this.submitted = false;
     this.createForm.reset();
@@ -144,7 +139,11 @@ export class MovieFormComponent implements OnDestroy {
   }
 
   private addGenresList(genre: string) {
-    if (!this.genresSelect.includes(genre)) {
+    if (
+      !this.genresSelect
+        .map((genre) => genre.toLowerCase())
+        .includes(genre.toLowerCase())
+    ) {
       this.genresSelect.push(genre);
     }
     // Aqui voy a guardar el valor en lo seleccionado
@@ -154,7 +153,7 @@ export class MovieFormComponent implements OnDestroy {
 
   resetForm() {
     if (window.location.hash.indexOf('edit') > -1) {
-      this.navigationService.goTo('/movies/details/' + this.movie?.id);
+      this.navigationService.goTo('/movies/details/' + this.movie!!.id);
     }
     this.createForm = this.formBuilder.group(configcreateMovieForm());
     this.genresSelect.length = 0;
@@ -177,14 +176,34 @@ export class MovieFormComponent implements OnDestroy {
     delete movieData['company'];
     movieData.genre = this.genresSelect;
     this.loading = true;
+    if (this.createItem) {
+      this.moviesService
+        .add(movieData, company!.id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data) => {
+          console.log(data);
+          this.resetForm();
+          this.loading = false;
+          // Mostrar alerta para notificar que todo OK!
+          this.alertService.dialogConfirm('cccc', '333', TypeAlertEnum.SUCCESS);
+        });
+      return;
+    }
+    console.log(movieData, company?.id, this.movie!.id);
+    // Actualizar
     this.moviesService
-      .add(movieData, company!.id)
+      .update(movieData, company!.id, this.movie!.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
+        console.log(data);
         this.resetForm();
         this.loading = false;
         // Mostrar alerta para notificar que todo OK!
-        this.alertService.dialogConfirm('cccc', '333', TypeAlertEnum.SUCCESS);
+        this.alertService.dialogConfirm(
+          'Actualizado',
+          '333',
+          TypeAlertEnum.SUCCESS
+        );
       });
   }
 
