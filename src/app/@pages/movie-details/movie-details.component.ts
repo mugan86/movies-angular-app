@@ -3,7 +3,6 @@ import { IMovie } from '@pages/movies/movie.interface';
 import { Component, OnDestroy } from '@angular/core';
 import { TitleService, NavigationService, ScreenService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/internal/Observable';
 import { MoviesService } from '@pages/movies/movies.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subject } from 'rxjs/internal/Subject';
@@ -21,7 +20,7 @@ export class MovieDetailsComponent implements OnDestroy {
   private readonly unsubscribe$ = new Subject();
   id: string = '';
   movie?: IMovie;
-  loading$: Observable<boolean>;
+  loading: boolean = true;
   screen: { width: number; height: number } = {
     width: 0,
     height: 0,
@@ -42,23 +41,42 @@ export class MovieDetailsComponent implements OnDestroy {
     this.route.paramMap
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((params: ParamMap) => {
-        this.moviesService.getItem(Number(params.get('id')));
+        this.moviesService
+          .getItem(Number(params.get('id')))
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe((result) => {
+            if (result.status) {
+              this.movie = result.movie;
+              this.titleService.change(result.movie!.title);
+              this.loading = false;
+            } else if (!result.status) {
+              if (result.message.status === 404) {
+                this.alertService
+                  .dialogConfirm(
+                    'alerts.infoNotFound',
+                    'alerts.infoNotFoundDescription',
+                    TypeAlertEnum.ERROR
+                  )
+                  .then(() => {
+                    this.navigateTo('');
+                  });
+                return;
+              }
+              this.alertService.dialogConfirm(
+                'alerts.communicationOffTitle',
+                'alerts.communicationOffDescription',
+                TypeAlertEnum.ERROR
+              );
+            }
+          });
       });
-    // Escuchando cambios
-    this.moviesService.movie
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((movie) => {
-        this.titleService.change(movie.title);
-        this.movie = movie;
-      });
-    this.loading$ = this.moviesService.loadingData.pipe(
-      takeUntil(this.unsubscribe$)
-    );
 
     this.navigationService.isDetailsOrFormPage(true);
-    this.screenService.screen$.subscribe((screen: IScreen) => {
-      this.screen = screen;
-    });
+    this.screenService.screen$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((screen: IScreen) => {
+        this.screen = screen;
+      });
   }
 
   trackByElement = (__: number, elementString: any): string => elementString;
@@ -72,24 +90,27 @@ export class MovieDetailsComponent implements OnDestroy {
       )
       .then(async (result: any) => {
         if (result.isConfirmed) {
-          this.moviesService.loadingData$.next(true);
-          this.moviesService.delete(this.movie!.id).subscribe((data) => {
-            if (data.status) {
-              this.alertService
-                .dialogConfirm(
-                  'Eliminado',
-                  'Selección eliminada correctamente',
-                  TypeAlertEnum.SUCCESS
-                )
-                .then(() => this.navigateTo('/movies'));
-            } else {
-              this.alertService.dialogConfirm(
-                'No eliminado',
-                'Debido a un problema no se ha eliminado',
-                TypeAlertEnum.WARNING
-              );
-            }
-          });
+          this.loading = true;
+          this.moviesService
+            .delete(this.movie!.id)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((data) => {
+              if (data.status) {
+                this.alertService
+                  .dialogConfirm(
+                    'Eliminado',
+                    'Selección eliminada correctamente',
+                    TypeAlertEnum.SUCCESS
+                  )
+                  .then(() => this.navigateTo('/movies'));
+              } else {
+                this.alertService.dialogConfirm(
+                  'No eliminado',
+                  'Debido a un problema no se ha eliminado',
+                  TypeAlertEnum.WARNING
+                );
+              }
+            });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           this.alertService.dialogConfirm(
             'Cancelled',
@@ -109,7 +130,6 @@ export class MovieDetailsComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.moviesService.reset();
     this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
   }

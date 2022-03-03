@@ -1,6 +1,6 @@
 import { AlertService } from '@shared/services/alert.service';
 import { IMovie } from '@pages/movies/movie.interface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NavigationService, TitleService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
@@ -8,13 +8,16 @@ import { MoviesService } from '@pages/movies/movies.service';
 import { IListField } from '@core/interfaces/form.interface';
 import { configcreateMovieForm } from './form-configs';
 import { TypeAlertEnum } from '@core/constants/alerts';
+import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { Subject } from 'rxjs/internal/Subject';
 
 @Component({
   selector: 'app-movie-form',
   templateUrl: './movie-form.component.html',
   styleUrls: ['./movie-form.component.css'],
 })
-export class MovieFormComponent implements OnInit {
+export class MovieFormComponent implements OnInit, OnDestroy {
+  private readonly unsubscribe$ = new Subject();
   loading: boolean = true;
   createForm: FormGroup;
   submitted: boolean = false;
@@ -34,9 +37,6 @@ export class MovieFormComponent implements OnInit {
   ) {
     // Aquí para la edición tendré que añadir de coger el objeto seleccionado
     this.createForm = this.formBuilder.group(configcreateMovieForm());
-    // https://www.positronx.io/angular-url-validation-with-reactive-forms-tutorial/
-    // https://www.positronx.io/angular-select-dropdown-with-reactive-forms-examples/
-    // https://stackblitz.com/edit/ng-reactive-tpl-forms?file=src%2Fapp%2Freactive-forms%2Freactive-forms.component.html
 
     this.translate.setDefaultLang('es');
     this.titleService.change('navbarSidebar.moviesAdd');
@@ -50,11 +50,14 @@ export class MovieFormComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.moviesService.formListElements().subscribe((data) => {
-      this.actorsList = data.actor;
-      this.companiesList = data.companies;
-      this.loading = false;
-    });
+    this.moviesService
+      .formListElements()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.actorsList = data.actor;
+        this.companiesList = data.companies;
+        this.loading = false;
+      });
   }
 
   get form() {
@@ -107,12 +110,19 @@ export class MovieFormComponent implements OnInit {
     delete movieData['company'];
     movieData.genre = this.genresSelect;
     this.loading = true;
-    this.moviesService.add(movieData, company!.id).subscribe((data) => {
-      this.resetForm();
-      console.log(data)
-      this.loading = false;
-      // Mostrar alerta para notificar que todo OK!
-      this.alertService.dialogConfirm('cccc', '333', TypeAlertEnum.SUCCESS);
-    });
+    this.moviesService
+      .add(movieData, company!.id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.resetForm();
+        this.loading = false;
+        // Mostrar alerta para notificar que todo OK!
+        this.alertService.dialogConfirm('cccc', '333', TypeAlertEnum.SUCCESS);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next(true);
+    this.unsubscribe$.complete();
   }
 }

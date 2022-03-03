@@ -1,16 +1,17 @@
-<app-details-content-item *ngIf="loading$ | async"></app-details-content-item>
-<section class="container" *ngIf="(loading$ | async) === false">
+<app-details-content-item *ngIf="loading"></app-details-content-item>
+<section class="container" *ngIf="!loading">
   <div class="row">
     <div class="col-md-3">
       <img
-        class="img-fluid" [ngClass]="{'cover': screen.width <= 460}"
+        class="img-fluid"
+        [ngClass]="{ cover: screen.width <= 460 }"
         [src]="movie?.poster"
         [alt]="movie?.title"
         onerror="this.src='/assets/img/default.webp'"
       />
     </div>
 
-    <div class="col-md-8" [ngClass]="{'mt-2': screen.width <= 460}">
+    <div class="col-md-8" [ngClass]="{ 'mt-2': screen.width <= 460 }">
       <div class="row">
         <div class="col text-start">
           <h3>{{ "details.rating" | translate }}</h3>
@@ -52,10 +53,18 @@
     </div>
   </div>
   <div class="action-buttons float-end me-5">
-    <button type="button" class="btn btn-success action-buttons__circle__xl me-2" (click)="updateItem()">
+    <button
+      type="button"
+      class="btn btn-success action-buttons__circle__xl me-2"
+      (click)="updateItem()"
+    >
       <i class="fa-solid fa-pencil"></i>
     </button>
-    <button type="button" class="btn btn-danger action-buttons__circle__xl" (click)="deleteItem()">
+    <button
+      type="button"
+      class="btn btn-danger action-buttons__circle__xl"
+      (click)="deleteItem()"
+    >
       <i class="fa-solid fa-trash-can"></i>
     </button>
   </div>

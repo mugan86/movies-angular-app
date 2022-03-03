@@ -10,7 +10,11 @@
       "deleteTitle": "¿Estás listo para eliminar?",
       "deleteContent": "Esta acción eliminará definitivamente el elemento seleccionado",
       "confirm": "Si, estoy listo",
-      "cancel": "No, quizás más tarde"
+      "cancel": "No, quizás más tarde",
+      "communicationOffTitle": "No hay conexión",
+      "communicationOffDescription": "No se ha podido conectar. Inténtelo de nuevo y si el problema persiste comuniquelo a un responsable",
+      "infoNotFound": "No existe",
+      "infoNotFoundDescription": "No hemos podido obtener la información requerida. Inténtelo de nuevo y si el problema persiste comuniquelo a un responsable"
     }
   }
   

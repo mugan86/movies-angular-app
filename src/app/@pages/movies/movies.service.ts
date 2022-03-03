@@ -29,8 +29,6 @@ import { Router } from '@angular/router';
 })
 export class MoviesService {
   private baseUrl = BASE_URL;
-
-  loadingData$ = new BehaviorSubject<boolean>(true);
   private movies$ = new BehaviorSubject<IMovie[]>([]);
   private movie$ = new Subject<IMovie>();
 
@@ -42,14 +40,6 @@ export class MoviesService {
     private router: Router
   ) {}
 
-  get loadingData() {
-    return this.loadingData$.asObservable();
-  }
-
-  get movies() {
-    return this.movies$.asObservable();
-  }
-
   get movie() {
     return this.movie$.asObservable();
   }
@@ -57,27 +47,22 @@ export class MoviesService {
   getAll() {
     const url = `${this.baseUrl}/movies`;
 
-    const sub$: Subscription = this.http
+    return this.http
       .get<IMovie[]>(url)
       .pipe(
-        tap(() => this.loadingData$.next(true)),
-        tap((movies) => this.movies$.next(movies)),
-        tap(() => this.loadingData$.next(false)),
-        catchError(catchError((error) => of(error)))
-      )
-      .subscribe({
-        complete: () => sub$.unsubscribe(),
-        error: () => sub$.unsubscribe(),
-      });
+        map((movies) => {
+          return {status: true, message: '', movies}
+        }),
+        catchError((error) => of({status: false, message: error, movies: []}))
+      );
   }
 
   getItem(id: number) {
     const url = `${this.baseUrl}/movies/${id}`;
 
-    const sub$: Subscription = this.http
+    return this.http
       .get<IMovie>(url)
       .pipe(
-        tap(() => this.loadingData$.next(true)),
         switchMap((movie: IMovie) => {
           return forkJoin([
             of(movie),
@@ -93,25 +78,14 @@ export class MoviesService {
                   return company?.movies.includes(movie.id);
                 }
               )[0];
-              return movie;
+              return {status: true, movie, message: ''};
             })
           );
         }),
-        tap((movie) => this.movie$.next(movie)),
-        tap(() => this.loadingData$.next(false)),
-        catchError(async (error) =>
-          this.alertService
-            .dialogConfirm('eeee', 'eeee', TypeAlertEnum.ERROR)
-            .then((value) => {
-              this.router.navigateByUrl('/');
-              return value;
-            })
-        )
-      )
-      .subscribe({
-        complete: () => sub$.unsubscribe(),
-        error: () => sub$.unsubscribe(),
-      });
+        catchError((error: any) => {
+          return of({status: false, movie: undefined, message: error})
+        })
+      );
   }
 
   delete(id: number) {
@@ -192,7 +166,6 @@ export class MoviesService {
   }
 
   reset = () => {
-    this.loadingData$.next(true);
     this.movies$.next([]);
     this.movie$ = new Subject<IMovie>();
   };
