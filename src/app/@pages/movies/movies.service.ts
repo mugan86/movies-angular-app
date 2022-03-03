@@ -1,91 +1,71 @@
 import { Observable } from 'rxjs/internal/Observable';
-import { AlertService } from '@shared/services/alert.service';
 import { ICompany } from '@pages/companies/company.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  BehaviorSubject,
   catchError,
   EMPTY,
   forkJoin,
   map,
   of,
-  Subject,
-  Subscription,
   switchMap,
-  tap,
-  throwError,
   combineLatest,
 } from 'rxjs';
 import { IMovie } from './movie.interface';
 import { BASE_URL } from '@core/constants/api';
 import { ActorService } from '@pages/actors/actor.service';
 import { CompaniesService } from '@pages/companies/companies.service';
-import { TypeAlertEnum } from '@core/constants/alerts';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MoviesService {
   private baseUrl = BASE_URL;
-  private movies$ = new BehaviorSubject<IMovie[]>([]);
-  private movie$ = new Subject<IMovie>();
 
   constructor(
     private http: HttpClient,
     private actorsService: ActorService,
-    private companiesService: CompaniesService,
-    private alertService: AlertService,
-    private router: Router
+    private companiesService: CompaniesService
   ) {}
 
-  get movie() {
-    return this.movie$.asObservable();
-  }
-
-  getAll() {
+  list() {
     const url = `${this.baseUrl}/movies`;
 
-    return this.http
-      .get<IMovie[]>(url)
-      .pipe(
-        map((movies) => {
-          return {status: true, message: '', movies}
-        }),
-        catchError((error) => of({status: false, message: error, movies: []}))
-      );
+    return this.http.get<IMovie[]>(url).pipe(
+      map((movies) => {
+        return { status: true, message: '', movies };
+      }),
+      catchError((error) => of({ status: false, message: error, movies: [] }))
+    );
   }
 
-  getItem(id: number) {
+  get(id: number) {
     const url = `${this.baseUrl}/movies/${id}`;
 
-    return this.http
-      .get<IMovie>(url)
-      .pipe(
-        switchMap((movie: IMovie) => {
-          return forkJoin([
-            of(movie),
-            ...movie.actors.map((item) => this.actorsService.item(item)),
-            this.companiesService.list(),
-          ]).pipe(
-            map((data: any[]) => {
-              // console.log(data)
-              const movie: IMovie = data[0];
-              movie.actors = data.slice(1, data.length - 1);
-              movie.company = data[data.length - 1].filter(
-                (company: ICompany) => {
-                  return company?.movies.includes(movie.id);
-                }
-              )[0];
-              return {status: true, movie, message: ''};
-            })
-          );
-        }),
-        catchError((error: any) => {
-          return of({status: false, movie: undefined, message: error})
-        })
-      );
+    return this.http.get<IMovie>(url).pipe(
+      switchMap((movie: IMovie) => {
+        return forkJoin([
+          of(movie),
+          ...movie.actors.map((item) => this.actorsService.item(item)),
+          this.companiesService.list(),
+        ]).pipe(
+          map((data: any[]) => {
+            // console.log(data)
+            const movie: IMovie = data[0];
+            movie.actors = data.slice(1, data.length - 1);
+            movie.company = data[data.length - 1].filter(
+              (company: ICompany) => {
+                return company?.movies.includes(movie.id);
+              }
+            )[0];
+            return { status: true, movie, message: '' };
+          })
+        );
+      }),
+      catchError((error: any) => {
+        return of({ status: false, movie: undefined, message: error });
+      })
+    );
   }
 
   delete(id: number) {
@@ -102,16 +82,20 @@ export class MoviesService {
 
             if (company) {
               const movies = company.movies.filter((c) => c !== movie.id);
-              return this.editCompany(company.id, { ...company, movies });
+              return this.companiesService.edit(company.id, {
+                ...company,
+                movies,
+              });
             }
-
             return of(EMPTY);
           })
         );
       }),
-      map(() => { return {
-        status: true
-      }}),
+      map(() => {
+        return {
+          status: true,
+        };
+      }),
       catchError((error) => of(error))
     );
   }
@@ -124,28 +108,66 @@ export class MoviesService {
 
     return movie$.pipe(
       switchMap((movie) => {
-        return this.getCompanyById(companyId).pipe(
-          switchMap((company) => {
-            return this.editCompany(companyId, {
-              ...company,
-              movies: [...company?.movies, movie.id],
-            });
-          })
-        );
+        return this.companiesService.assignMovieInCompany(movie, companyId);
       }),
       map(() => of({ status: 'ok' })),
       catchError((error) => of(error))
     );
   }
 
-  getCompanyById(companyId: number) {
-    return this.http.get<ICompany>(`${this.baseUrl}/companies/${companyId}`);
-  }
+  update(movie: any, companyId: number, movieId: number) {
+    movie.id = movieId;
+    const movie$: Observable<IMovie> = this.http.put<IMovie>(
+      `${this.baseUrl}/movies/${movieId}`,
+      movie
+    );
+    return movie$.pipe(
+      switchMap(() => {
+        return forkJoin({
+          movie: of(movie),
+          companyByMovieId: this.companiesService.itemByMovie(movieId),
+        }).pipe(
+          map(({ movie, companyByMovieId }) => {
+            movie.company = companyByMovieId;
+            return { movie };
+          }),
+          map(({ movie }) => {
+            let company = { ...movie.company };
+            const moviesWithout: number[] = company!.movies.filter(
+              (c: number) => c !== movieId
+            );
 
-  editCompany(companyId: number, company: ICompany) {
-    return this.http.put<ICompany>(
-      `${this.baseUrl}/companies/${companyId}`,
-      company
+            const _company = {
+              ...company,
+              movies: moviesWithout,
+            };
+
+            return { movie, oldCompany: _company, companyId };
+          }),
+          switchMap(
+            (value: {
+              movie: IMovie;
+              oldCompany: ICompany;
+              companyId: number;
+            }) => {
+              return forkJoin({
+                movie: of(value.movie),
+                newRelation: this.companiesService.assignMovieInCompany(
+                  movie,
+                  companyId
+                ),
+                old:
+                  companyId !== value.oldCompany.id
+                    ? this.companiesService.edit(
+                        value.oldCompany.id,
+                        value.oldCompany
+                      )
+                    : of(EMPTY),
+              });
+            }
+          )
+        );
+      })
     );
   }
 
@@ -153,28 +175,14 @@ export class MoviesService {
     const companies$ = this.companiesService.names();
     const actor$ = this.actorsService.names();
 
-    // 
+    //
     // return combineLatest([companies$, actor$]).pipe((
     //   map(([companiesFields, actorFields]) => of({companiesFields, actorFields}))
     // ))
 
     return forkJoin({
       companies: companies$,
-      actor: actor$
-    })
-
-  }
-
-  reset = () => {
-    this.movies$.next([]);
-    this.movie$ = new Subject<IMovie>();
-  };
-
-  /**
-   * Sistema muy basico de manejo de errores
-   */
-  handleError(error: { type: string; status: number; message: string }) {
-    console.log(error);
-    return throwError(() => EMPTY);
+      actor: actor$,
+    });
   }
 }

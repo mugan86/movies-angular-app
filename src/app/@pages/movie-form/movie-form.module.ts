@@ -11,7 +11,7 @@ import { SimpleFormLoaderModule } from '@core/components';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SelectValueModule } from '@shared/components/select-value/select-value.module';
 const createTranslateLoader = (http: HttpClient) => {
-  return new CustomTranslateLoader(http, FEATURE_DIRECTORIES_I18N.moviesAdd);
+  return new CustomTranslateLoader(http, FEATURE_DIRECTORIES_I18N.moviesForm);
 };
 @NgModule({
   declarations: [MovieFormComponent],
