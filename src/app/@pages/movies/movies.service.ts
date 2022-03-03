@@ -31,7 +31,9 @@ export class MoviesService {
   list() {
     const url = `${this.baseUrl}/movies`;
 
-    this.companiesService.itemByMovie(11).subscribe((data) => console.log(data));
+    this.companiesService
+      .itemByMovie(11)
+      .subscribe((data) => console.log(data));
 
     return this.http.get<IMovie[]>(url).pipe(
       map((movies) => {
@@ -118,75 +120,58 @@ export class MoviesService {
   }
 
   update(movie: any, companyId: number, movieId: number) {
-    console.log(movieId, movie);
     movie.id = movieId;
     const movie$: Observable<IMovie> = this.http.put<IMovie>(
       `${this.baseUrl}/movies/${movieId}`,
       movie
     );
-
     return movie$.pipe(
-      
-      switchMap((movie: IMovie) => {
-        return forkJoin([
-          of(movie),
-          this.companiesService.itemByMovie(movieId),
-          this.companiesService.assignMovieInCompany(movie, companyId),
-        ]).pipe(
-          map((data: any[]) => {
-            console.log(data)
-            const movie = data [0];
-            let oldRelation: ICompany = data[1];
-            const newRelation: ICompany = data[2];
-            if (oldRelation.id !== newRelation.id) {
-              const moviesOldCompany = oldRelation.movies;
-              const removeOldRelation = moviesOldCompany.filter((value) => value !== movieId)
-              oldRelation.movies = removeOldRelation;
-            }
-            
-            console.log(oldRelation, newRelation);
-            return { movie, old: oldRelation, newRelation };
+      switchMap(() => {
+        return forkJoin({
+          movie: of(movie),
+          companyByMovieId: this.companiesService.itemByMovie(movieId),
+        }).pipe(
+          map(({ movie, companyByMovieId }) => {
+            movie.company = companyByMovieId;
+            return { movie };
           }),
-          switchMap(({movie, old, newRelation}) => {
-            return forkJoin({
-              status: of(true),
-              movie: of(movie),
-              old: (old.id !== newRelation.id) ? this.companiesService.edit(old.id, old) : of(old),
-              new: of(newRelation),
-            })
-          })
+          map(({ movie }) => {
+            let company = { ...movie.company };
+            const moviesWithout: number[] = company!.movies.filter(
+              (c: number) => c !== movieId
+            );
+
+            const _company = {
+              ...company,
+              movies: moviesWithout,
+            };
+
+            return { movie, oldCompany: _company, companyId };
+          }),
+          switchMap(
+            (value: {
+              movie: IMovie;
+              oldCompany: ICompany;
+              companyId: number;
+            }) => {
+              return forkJoin({
+                movie: of(value.movie),
+                newRelation: this.companiesService.assignMovieInCompany(
+                  movie,
+                  companyId
+                ),
+                old:
+                  companyId !== value.oldCompany.id
+                    ? this.companiesService.edit(
+                        value.oldCompany.id,
+                        value.oldCompany
+                      )
+                    : of(EMPTY),
+              });
+            }
+          )
         );
-      }),
-     /*switchMap((oldRelation: ICompany, newRelation: ICompany) => {
-        return forkJoin([
-          of(movie),
-          this.companiesService.itemByMovie(movieId),
-          this.companiesService.assignMovieInCompany(movie, companyId),
-        ]).pipe(
-          map((data: any[]) => {
-            console.log(data)
-            const movie = data [0];
-            const oldRelation: ICompany = data[1];
-            const newRelation: ICompany = data[2];
-            oldRelation.movies.slice(oldRelation.movies.indexOf(movieId), 1);
-            newRelation.movies.push(movieId);
-            console.log(oldRelation, newRelation);
-            return { oldRelation, newRelation };
-          })
-        );
-      }),*/
-      /*switchMap((movie) => {
-        return of({ movie, lastCompany: 
-          this.companiesService.itemByMovie(11).pipe(map((item) => item.company))})
-      }),
-      switchMap(({movie, lastCompany}) => {
-        console.log(lastCompany)
-        return this.companiesService.assignMovieInCompany(movie, companyId);
-      }),
-      map(() => {
-        return { status: true, movie, message: '' };
-      }),*/
-      catchError((error) => of(error))
+      })
     );
   }
 
