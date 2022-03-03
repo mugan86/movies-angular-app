@@ -1,25 +1,20 @@
 import { Observable } from 'rxjs/internal/Observable';
-import { AlertService } from '@shared/services/alert.service';
 import { ICompany } from '@pages/companies/company.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  BehaviorSubject,
   catchError,
   EMPTY,
   forkJoin,
   map,
   of,
-  Subject,
   switchMap,
-  throwError,
   combineLatest,
 } from 'rxjs';
 import { IMovie } from './movie.interface';
 import { BASE_URL } from '@core/constants/api';
 import { ActorService } from '@pages/actors/actor.service';
 import { CompaniesService } from '@pages/companies/companies.service';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +28,7 @@ export class MoviesService {
     private companiesService: CompaniesService
   ) {}
 
-  getAll() {
+  list() {
     const url = `${this.baseUrl}/movies`;
 
     return this.http.get<IMovie[]>(url).pipe(
@@ -44,7 +39,7 @@ export class MoviesService {
     );
   }
 
-  getItem(id: number) {
+  get(id: number) {
     const url = `${this.baseUrl}/movies/${id}`;
 
     return this.http.get<IMovie>(url).pipe(
@@ -92,7 +87,6 @@ export class MoviesService {
                 movies,
               });
             }
-
             return of(EMPTY);
           })
         );
@@ -114,30 +108,31 @@ export class MoviesService {
 
     return movie$.pipe(
       switchMap((movie) => {
-        return this.companiesService.item(companyId).pipe(
-          switchMap((company) => {
-            return this.companiesService.edit(companyId, {
-              ...company,
-              movies: [...company?.movies, movie.id],
-            });
-          })
-        );
+        return this.companiesService.assignMovieInCompany(movie, companyId);
       }),
       map(() => of({ status: 'ok' })),
       catchError((error) => of(error))
     );
   }
 
-  /*getCompanyById(companyId: number) {
-    return this.http.get<ICompany>(`${this.baseUrl}/companies/${companyId}`);
-  }
-
-  editCompany(companyId: number, company: ICompany) {
-    return this.http.put<ICompany>(
-      `${this.baseUrl}/companies/${companyId}`,
-      company
+  update(movie: any, companyId: number, movieId: number) {
+    console.log(movieId, movie);
+    movie.id = movieId;
+    const movie$: Observable<IMovie> = this.http.put<IMovie>(
+      `${this.baseUrl}/movies/${movieId}`,
+      movie
     );
-  }*/
+
+    return movie$.pipe(
+      switchMap((movie) => {
+        return this.companiesService.assignMovieInCompany(movie, companyId);
+      }),
+      map(() => {
+        return { status: true, movie, message: '' };
+      }),
+      catchError((error) => of(error))
+    );
+  }
 
   formListElements() {
     const companies$ = this.companiesService.names();
@@ -153,5 +148,4 @@ export class MoviesService {
       actor: actor$,
     });
   }
-
 }

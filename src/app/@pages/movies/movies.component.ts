@@ -29,7 +29,7 @@ export class MoviesComponent implements OnDestroy {
     this.translate.setDefaultLang('es');
 
     this.moviesService
-      .getAll()
+      .list()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((result) => {
         console.log(result);
