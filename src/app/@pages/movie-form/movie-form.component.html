@@ -80,7 +80,7 @@
     </div>
 
     <div id="hashtags">
-      <app-select-value
+      <app-select-value (labelRemove)="removeGenre($event)"
         *ngFor="let genre of genresSelect"
         [label]="genre"
       ></app-select-value>

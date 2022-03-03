@@ -151,6 +151,10 @@ export class MovieFormComponent implements OnDestroy {
     console.log(this.createForm.value);
   }
 
+  removeGenre (removeItem: string) {
+    this.genresSelect = [...this.genresSelect.filter((genreItem) => genreItem != removeItem)]
+  }
+
   resetForm() {
     if (window.location.hash.indexOf('edit') > -1) {
       this.navigationService.goTo('/movies/details/' + this.movie!!.id);
