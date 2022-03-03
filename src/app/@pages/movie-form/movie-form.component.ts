@@ -161,7 +161,7 @@ export class MovieFormComponent implements OnDestroy {
     }
     this.createForm = this.formBuilder.group(configcreateMovieForm());
     this.genresSelect.length = 0;
-    this.actorsList.length = 0;
+    // this.actorsList.length = 0;
     this.selectedActors.length = 0;
   }
 
