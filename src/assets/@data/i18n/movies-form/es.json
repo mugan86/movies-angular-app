@@ -28,8 +28,8 @@
             "ratingRequired": "Debes de introducir una puntuación de 1 a 10 (incluidos)",
             "titleRequired": "El título es necesario para poder crear la película",
             "yearMaxValue": "El año más alto que puedes introducir es el actual",
-            "yearMinValue": "El año más bajo que puedes introducir es el año 2000",
-            "yearRequired": "Debes de introducir el año de estreno entre el 2000 y el actual (incluidos)"
+            "yearMinValue": "El año más bajo que puedes introducir es el año 1950",
+            "yearRequired": "Debes de introducir el año de estreno entre el 1950 y el actual (incluidos)"
         }
     }
 }

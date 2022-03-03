@@ -1,7 +1,6 @@
 {
   "movies": [
     {
-      "id": 1,
       "title": "Dancing Lady",
       "poster": "http://dummyimage.com/400x600.png/cc0000/ffffff",
       "genre": [
@@ -9,30 +8,31 @@
         "Musical",
         "Romance"
       ],
-      "year": 2006,
-      "duration": 161,
-      "imdbRating": 8.27,
       "actors": [
         4,
         5,
         6
-      ]
+      ],
+      "year": 2006,
+      "duration": 161,
+      "imdbRating": 8.27,
+      "id": 1
     },
     {
-      "id": 2,
       "title": "Mooring, The",
       "poster": "http://dummyimage.com/400x600.png/dddddd/000000",
       "genre": [
         "Horror",
         "Thriller"
       ],
-      "year": 1987,
-      "duration": 187,
-      "imdbRating": 1.99,
       "actors": [
         5,
         6
-      ]
+      ],
+      "year": 1987,
+      "duration": 187,
+      "imdbRating": 1.99,
+      "id": 2
     },
     {
       "id": 3,
@@ -358,7 +358,6 @@
       "employees": 81,
       "rating": 4.32,
       "movies": [
-        1,
         10,
         12
       ]
@@ -371,9 +370,9 @@
       "employees": 611,
       "rating": 8.19,
       "movies": [
-        2,
         3,
-        4
+        4,
+        1
       ]
     },
     {
@@ -409,7 +408,8 @@
       "employees": 921,
       "rating": 1.77,
       "movies": [
-        11
+        11,
+        2
       ]
     }
   ]
