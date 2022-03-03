@@ -19,7 +19,7 @@ export const configcreateMovieForm = (initForm: any = []) => {
       [
         Validators.required,
         Validators.max(new Date().getFullYear()),
-        Validators.min(2000),
+        Validators.min(1950),
       ],
     ],
     duration: [
