@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { NavigationStart, Router, NavigationEnd } from '@angular/router';
 import { SidebarService, TitleService } from '@core/services';
-import { Location } from '@angular/common';
 import { NavigationService } from '@core/services/navigation.service';
 
 @Component({
@@ -11,7 +9,7 @@ import { NavigationService } from '@core/services/navigation.service';
 })
 export class NavbarComponent {
   title: string = '';
-  isDetails: boolean = false;
+  isDetailsOrForm: boolean = false;
   currentPath: string = '';
   constructor(
     private sidebarService: SidebarService,
@@ -20,8 +18,8 @@ export class NavbarComponent {
   ) {
     console.log(window.location.hash)
     this.titleService.title.subscribe((title) => (this.title = title));
-    this.navigationService.inDetails$.subscribe((inDetails) => {
-      this.isDetails = inDetails
+    this.navigationService.inDetailsOrForm$.subscribe((inDetailsOrForm) => {
+      this.isDetailsOrForm = inDetailsOrForm
     })
     
   }

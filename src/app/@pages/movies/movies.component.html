@@ -1,11 +1,18 @@
 <app-content-items-loader
   [elementsShow]="9"
-  *ngIf="loading$ | async"
+  *ngIf="loading"
 ></app-content-items-loader>
-<div class="row" *ngIf="(loading$ | async) === false">
+<button
+  type="button"
+  class="btn btn-warning btn-circle btn-xl me-2 movie__button-new"
+  (click)="add()"
+>
+  <i class="fa-solid fa-plus"></i>
+</button>
+<div class="row" *ngIf="!loading">
   <div
     class="col-sm-4"
-    *ngFor="let movie of movies$ | async; trackBy: trackById"
+    *ngFor="let movie of movies; trackBy: trackById"
   >
     <app-basic-info-card
       [info]="{

@@ -1,0 +1,222 @@
+<app-simple-loader *ngIf="loading"></app-simple-loader>
+<form (ngSubmit)="onSubmit()" [formGroup]="createForm" *ngIf="!loading">
+  <!-- Título de la película 'title'-->
+  <div class="mb-3">
+    <label for="title" class="form-label">{{
+      "forms.labels.title" | translate
+    }}</label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      placeholder="{{ 'forms.labels.title' | translate }}"
+      formControlName="title"
+      [ngClass]="{
+        'is-invalid':
+          form.title.errors && form.title.touched && form.title.invalid
+      }"
+    />
+    <div *ngIf="form.title.errors" class="invalid-feedback">
+      <div *ngIf="form.title.errors.required">
+        {{ "forms.validationMessages.titleRequired" | translate }}
+      </div>
+    </div>
+  </div>
+  <!-- Imagen de la película 'poster'-->
+  <div class="mb-3">
+    <label for="poster" class="form-label">{{
+      "forms.labels.poster" | translate
+    }}</label>
+    <input
+      type="url"
+      class="form-control"
+      id="poster"
+      placeholder="{{ 'forms.labels.poster' | translate }}"
+      formControlName="poster"
+      [ngClass]="{
+        'is-invalid':
+          form.poster.errors && form.poster.touched && form.poster.invalid
+      }"
+    />
+    <div
+      *ngIf="form.poster.touched && form.poster.invalid"
+      class="invalid-feedback"
+    >
+      <div *ngIf="form.poster.errors?.required">
+        {{ "forms.validationMessages.posterRequired" | translate }}
+      </div>
+      <div *ngIf="form.poster.errors?.pattern">
+        {{ "forms.validationMessages.posterValidUrl" | translate }}
+      </div>
+    </div>
+  </div>
+  <!-- Géneros de la película 'genre'-->
+  <div class="mb-3">
+    <label for="genre" class="form-label">{{
+      "forms.labels.genres" | translate
+    }}</label>
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="{{ 'forms.labels.genresDescription' | translate }}"
+        (keydown.enter)="addElement('genre')"
+        formControlName="genre"
+      />
+      <div class="input-group-append">
+        <button
+          class="btn bg-transparent btn__add"
+          (click)="addElement('genre')"
+        >
+          +
+        </button>
+      </div>
+    </div>
+
+    <div id="hashtags">
+      <app-select-value
+        *ngFor="let genre of genresSelect"
+        [label]="genre"
+      ></app-select-value>
+    </div>
+  </div>
+  <!-- Actores / Actrices 'actors'-->
+  <div class="mb-3">
+    <label for="actors" class="form-label">{{
+      "forms.labels.actors" | translate
+    }}</label>
+    <ng-select
+      formControlName="actors"
+      [multiple]="true"
+      [hideSelected]="true"
+      [closeOnSelect]="false"
+      placeholder=""
+    >
+      <ng-option *ngFor="let actor of actorsList" [value]="actor.id">{{
+        actor.label
+      }}</ng-option>
+    </ng-select>
+  </div>
+  <!-- Estudio que ha producido la película 'company'-->
+  <div class="mb-3">
+    <label for="company" class="form-label">{{
+      "forms.labels.company" | translate
+    }}</label>
+    <select
+      class="custom-select mb-3 form-select form-control"
+      formControlName="company"
+      [ngClass]="{
+        'is-invalid':
+          form.company.errors && form.company.touched && form.company.invalid
+      }"
+    >
+      <option [ngValue]="null" disabled>
+        {{ "forms.labels.companyDescription" | translate }}
+      </option>
+      <option *ngFor="let company of companiesList" [ngValue]="company">
+        {{ company.label }}
+      </option>
+    </select>
+    <div
+      *ngIf="form.company.errors"
+      class="invalid-feedback"
+      [ngStyle]="{ 'margin-top': '-11px' }"
+    >
+      Debes de seleccionar un estudio
+    </div>
+  </div>
+  <!-- Año de estreno de la película 'year'-->
+  <div class="mb-3">
+    <label for="year" class="form-label">{{
+      "forms.labels.releaseYear" | translate
+    }}</label>
+    <input
+      type="number"
+      id="year"
+      class="form-control"
+      name="year"
+      min="2000"
+      max="{{ currentYear }}"
+      step="1"
+      formControlName="year"
+      [ngClass]="{
+        'is-invalid': form.year.errors && form.year.touched && form.year.invalid
+      }"
+    />
+    <div *ngIf="form.year.errors" class="invalid-feedback">
+      <div *ngIf="form.year.errors.max">
+        {{ "forms.validationMessages.yearMaxValue" | translate }}
+      </div>
+      <div *ngIf="form.year.errors.min">
+        {{ "forms.validationMessages.yearMinValue" | translate }}
+      </div>
+      <div *ngIf="form.year.errors?.required">
+        {{ "forms.validationMessages.yearRequired" | translate }}
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="duration" class="form-label">{{
+      "forms.labels.duration" | translate
+    }}</label>
+    <input
+      type="number"
+      id="duration"
+      class="form-control"
+      name="duration"
+      min="70"
+      max="300"
+      step="1"
+      formControlName="duration"
+      [ngClass]="{
+        'is-invalid':
+          form.duration.errors && form.duration.touched && form.duration.invalid
+      }"
+    />
+    <div *ngIf="form.duration.errors" class="invalid-feedback">
+      <div *ngIf="form.duration.errors.max">
+        {{ "forms.validationMessages.durationMaxValue" | translate }}
+      </div>
+      <div *ngIf="form.duration.errors.min">
+        {{ "forms.validationMessages.durationMinValue" | translate }}
+      </div>
+      <div *ngIf="form.duration.errors?.required">
+        {{ "forms.validationMessages.durationRequired" | translate }}
+      </div>
+    </div>
+  </div>
+  <!-- Puntuación 'imdbRating'-->
+  <div class="mb-3">
+    <label for="imdbRating" class="form-label">{{
+      "forms.labels.ratings" | translate
+    }}</label>
+    <input
+      type="number"
+      class="form-control"
+      min="1"
+      max="10"
+      step="1"
+      formControlName="imdbRating"
+      [ngClass]="{
+        'is-invalid':
+          form.imdbRating.errors &&
+          form.imdbRating.touched &&
+          form.imdbRating.invalid
+      }"
+    />
+    <div *ngIf="form.imdbRating.errors" class="invalid-feedback">
+      <div *ngIf="form.imdbRating.errors.max">
+        {{ "forms.validationMessages.ratingMaxValue" | translate }}
+      </div>
+      <div *ngIf="form.imdbRating.errors.min">
+        {{ "forms.validationMessages.ratingMinValue" | translate }}
+      </div>
+      <div *ngIf="form.imdbRating.errors?.required">
+        {{ "forms.validationMessages.ratingRequired" | translate }}
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">
+    {{ "forms.buttons.submit" | translate }}
+  </button>
+</form>

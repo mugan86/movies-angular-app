@@ -1,4 +1,4 @@
-import { HashtagModule } from '@shared/components/hashtag/hashtag.module';
+import { HashtagModule } from '@shared/components';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 

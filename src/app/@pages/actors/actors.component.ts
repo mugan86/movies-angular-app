@@ -1,6 +1,5 @@
-import { NavigationService } from './../../@core/services/navigation.service';
+import { NavigationService, TitleService} from '@core/services';
 import { Component } from '@angular/core';
-import { TitleService } from '@core/services/title.service';
 import menuItems from '@data/menus/principal.json';
 
 @Component({
@@ -15,6 +14,6 @@ export class ActorsComponent {
   ) {
     this.titleService.change(menuItems[1].label);
 
-    this.navigationService.isDetailsPage(false);
+    this.navigationService.isDetailsOrFormPage(false);
   }
 }

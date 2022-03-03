@@ -27,8 +27,8 @@ export class AlertService {
       text: this.translateService.instant(text),
       icon,
       showCancelButton: true,
-      confirmButtonText: this.translateService.instant('ALERTS.confirm'),
-      cancelButtonText: this.translateService.instant('ALERTS.cancel'),
+      confirmButtonText: this.translateService.instant('alerts.confirm'),
+      cancelButtonText: this.translateService.instant('alerts.cancel'),
       reverseButtons: true,
     });
   };
