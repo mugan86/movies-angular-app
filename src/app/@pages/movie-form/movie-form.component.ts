@@ -165,6 +165,7 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.titleService.change('');
     this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
   }

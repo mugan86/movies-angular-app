@@ -53,6 +53,7 @@ export class MoviesComponent implements OnDestroy {
   add = () => this.router.navigateByUrl('/movies/add');
 
   ngOnDestroy(): void {
+    this.titleService.change('');
     this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
   }

@@ -130,6 +130,7 @@ export class MovieDetailsComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.titleService.change('');
     this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
   }

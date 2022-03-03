@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
 import { NavigationService, TitleService } from '@core/services';
 import menuItems from '@data/menus/principal.json';
 
@@ -7,7 +8,8 @@ import menuItems from '@data/menus/principal.json';
   templateUrl: './companies.component.html',
   styleUrls: ['./companies.component.css'],
 })
-export class CompaniesComponent {
+export class CompaniesComponent implements OnDestroy{
+  private readonly unsubscribe$ = new Subject(); 
   constructor(
     private titleService: TitleService,
     private navigationService: NavigationService
@@ -15,5 +17,11 @@ export class CompaniesComponent {
     this.titleService.change(menuItems[2].label);
 
     this.navigationService.isDetailsOrFormPage(false);
+  }
+
+  ngOnDestroy(): void {
+    this.titleService.change('');
+    this.unsubscribe$.next(true);
+    this.unsubscribe$.complete();
   }
 }
