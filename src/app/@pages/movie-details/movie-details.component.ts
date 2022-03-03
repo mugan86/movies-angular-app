@@ -126,7 +126,7 @@ export class MovieDetailsComponent implements OnDestroy {
   };
 
   async updateItem() {
-    console.log(this.movie);
+    this.navigationService.goTo(`/movies/edit/${this.movie?.id}`)
   }
 
   ngOnDestroy(): void {
