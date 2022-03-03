@@ -1,18 +1,21 @@
 import { Validators } from '@angular/forms';
 import { URL_VALIDATION_REGEX } from '@core/constants/regex';
 
-export const configcreateMovieForm = () => {
+export const configcreateMovieForm = (initForm: any = []) => {
+  if (initForm.length === 0) {
+    initForm = ['', '', '', null, [], new Date().getFullYear(), 120, 5];
+  }
   return {
-    title: ['', Validators.required],
+    title: [initForm[0], Validators.required],
     poster: [
-      '',
+      initForm[1],
       [Validators.required, Validators.pattern(URL_VALIDATION_REGEX)],
     ],
-    genre: [''],
-    company: [null, [Validators.required]],
-    actors: [[]],
+    genre: [initForm[2]],
+    company: [initForm[3], [Validators.required]],
+    actors: [initForm[4]],
     year: [
-      new Date().getFullYear(),
+      initForm[5],
       [
         Validators.required,
         Validators.max(new Date().getFullYear()),
@@ -20,12 +23,9 @@ export const configcreateMovieForm = () => {
       ],
     ],
     duration: [
-      120,
+      initForm[6],
       [Validators.required, Validators.max(300), Validators.min(70)],
     ],
-    imdbRating: [5, Validators.required],
+    imdbRating: [initForm[7], Validators.required],
   };
 };
-
-
-
