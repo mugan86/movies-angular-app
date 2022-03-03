@@ -17,7 +17,7 @@ export class CompaniesService {
   list = (): Observable<ICompany[]> =>
     this.httpClient.get<ICompany[]>(`${this.baseUrl}/companies`);
 
-  item = (id: any): Observable<ICompany> =>
+  item = (id: number) =>
     this.httpClient.get<ICompany>(`${this.baseUrl}/companies/${id}`);
 
   edit = (id: number, company: ICompany) => {
@@ -27,16 +27,25 @@ export class CompaniesService {
     );
   };
 
+  itemByMovie = (movieId: number): Observable<ICompany | undefined> => {
+    return this.list().pipe(
+      map((companies) =>
+        companies.find((company) => company.movies.includes(movieId))
+      ),
+      map((company) => company)
+    );
+  };
+
   assignMovieInCompany = (movie: IMovie, companyId: number) => {
     return this.item(companyId).pipe(
       switchMap((company) => {
         return this.edit(companyId, {
           ...company,
-          movies: [...company?.movies, movie.id],
+          movies: Array.from(new Set([...company?.movies, movie.id])) as [],
         });
       })
     );
-  }
+  };
 
   names = (): Observable<IListField[]> =>
     this.list().pipe(
