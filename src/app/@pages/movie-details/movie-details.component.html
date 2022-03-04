@@ -4,6 +4,7 @@
     <div class="col-md-3">
       <img
         class="img-fluid"
+        loading="lazy"
         [ngClass]="{ cover: screen.width <= 460 }"
         [src]="movie?.poster"
         [alt]="movie?.title"
