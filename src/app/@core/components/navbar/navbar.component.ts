@@ -23,9 +23,6 @@ export class NavbarComponent {
     })
     
   }
-  openNav(): void {
-    this.sidebarService.openMenu();
-  }
 
   back(): void {
     this.navigationService.back()

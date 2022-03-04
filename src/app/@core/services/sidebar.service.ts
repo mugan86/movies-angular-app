@@ -6,12 +6,4 @@ import principalMenu from '@data/menus/principal.json';
 })
 export class SidebarService {
   getPrincipalMenuItems = () => principalMenu;
-
-  openMenu = () => {
-    document.getElementById('sidebar-menu')!.style.width = '250px';
-  };
-
-  closeMenu = () => {
-    document.getElementById('sidebar-menu')!.style.width = '0';
-  };
 }
