@@ -22,7 +22,7 @@ export class NavigationService {
   /**
    * Volver a la página anterior desde detalles o un formulario
    */
-  back(): void {
+  back() {
     this.location.back();
   }
 }
