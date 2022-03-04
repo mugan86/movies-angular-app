@@ -47,7 +47,7 @@ export class MovieFormComponent implements OnDestroy {
         this.actorsList = data.actor;
         this.companiesList = data.companies;
       });
-    this.translate.setDefaultLang('es');
+    this.translate.use('es');
 
     this.navigationService.isDetailsOrFormPage(true);
 
@@ -138,6 +138,11 @@ export class MovieFormComponent implements OnDestroy {
     }
   }
 
+  /**
+   * Vamos añadiendo la información en una ista para mostrarse debajo de la barra
+   * de introducir la información
+   * @param genre Elemento a añadir en lista de géneros 
+   */
   private addGenresList(genre: string) {
     if (
       !this.genresSelect
@@ -148,9 +153,12 @@ export class MovieFormComponent implements OnDestroy {
     }
     // Aqui voy a guardar el valor en lo seleccionado
     this.createForm.controls['genre'].reset();
-    console.log(this.createForm.value);
   }
 
+  /**
+   * Eliminaremos las etiquetas que se van creando debajndo del input de los géneros
+   * @param removeItem elemento a borrar de las etiquetas
+   */
   removeGenre (removeItem: string) {
     this.genresSelect = [...this.genresSelect.filter((genreItem) => genreItem != removeItem)]
   }
@@ -161,20 +169,19 @@ export class MovieFormComponent implements OnDestroy {
     }
     this.createForm = this.formBuilder.group(configcreateMovieForm());
     this.genresSelect.length = 0;
-    this.actorsList.length = 0;
     this.selectedActors.length = 0;
   }
 
   onSubmit() {
-    console.log(this.createForm.value);
     this.submitted = true;
 
-    // stop here if form is invalid
+    // No sigue si es inválido
     if (this.createForm.invalid) {
+      // Mostrar alerta.
       return;
     }
 
-    // display form values on success
+    // FOrmulario OK
     const movieData: IMovie = this.createForm.value;
     const company = movieData.company;
     delete movieData['company'];
@@ -188,8 +195,7 @@ export class MovieFormComponent implements OnDestroy {
           console.log(data);
           this.resetForm();
           this.loading = false;
-          // Mostrar alerta para notificar que todo OK!
-          this.alertService.dialogConfirm('cccc', '333', TypeAlertEnum.SUCCESS);
+          this.alertService.dialogConfirm('alerts.createItemOKTitle', 'alerts.createItemOKDesc', TypeAlertEnum.SUCCESS);
         });
       return;
     }
@@ -204,12 +210,13 @@ export class MovieFormComponent implements OnDestroy {
         this.loading = false;
         // Mostrar alerta para notificar que todo OK!
         this.alertService.dialogConfirm(
-          'Actualizado',
-          '333',
+          'alerts.updateItemOKTitle', 'alerts.updateItemOKDesc',
           TypeAlertEnum.SUCCESS
         );
       });
   }
+
+  trackByElement = (__: number, elementString: any): string => elementString;
 
   ngOnDestroy(): void {
     this.titleService.change('');

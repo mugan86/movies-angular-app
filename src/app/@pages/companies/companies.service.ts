@@ -27,6 +27,11 @@ export class CompaniesService {
     );
   };
 
+  /**
+   * Buscaremos la compañía relacionada a la película
+   * @param movieId Id de la película para encontrar la compañía asociada
+   * @returns company: ICompany
+   */
   itemByMovie = (movieId: number): Observable<ICompany | undefined> => {
     return this.list().pipe(
       map((companies) =>
@@ -36,6 +41,13 @@ export class CompaniesService {
     );
   };
 
+  /**
+   * Actualizar la propiedad movies de la compañía seleccionada con la película
+   * especificada.
+   * @param movie Película que usaremos para asociarlo a una compañía
+   * @param companyId id de la compañia a donde vamos a relacionar la película
+   * @returns
+   */
   assignMovieInCompany = (movie: IMovie, companyId: number) => {
     return this.item(companyId).pipe(
       switchMap((company) => {
@@ -47,6 +59,10 @@ export class CompaniesService {
     );
   };
 
+  /**
+   * Obtenemos los básico para cargar en el formulario para crear / editar película
+   * @returns [{id: id de compañia, name: nombre de compañia}]
+   */
   names = (): Observable<IListField[]> =>
     this.list().pipe(
       map((company: ICompany[]) =>
@@ -59,6 +75,11 @@ export class CompaniesService {
       )
     );
 
+  /**
+   * Lista de compañía con sus relaciones a películas
+   * obteniendo lo básico como id, nombre y películas
+   * @returns
+   */
   getWithMovies = (): Observable<
     {
       id: number;

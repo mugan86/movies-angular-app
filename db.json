@@ -4,7 +4,8 @@
       "title": "Dancing Lady",
       "poster": "http://dummyimage.com/400x600.png/cc0000/ffffff",
       "genre": [
-        "Comedy"
+        "Comedy",
+        "Action"
       ],
       "actors": [
         4,
@@ -198,6 +199,79 @@
       "duration": 70,
       "imdbRating": 9.8,
       "id": 12
+    },
+    {
+      "title": "Scream (2022)",
+      "poster": "https://www.themoviedb.org/t/p/w1280/cIgmdAhesIqn2ykJfbNFMQYdxkO.jpg",
+      "genre": [
+        "Terror"
+      ],
+      "actors": [
+        1,
+        3,
+        2,
+        6,
+        7
+      ],
+      "year": 2022,
+      "duration": 79,
+      "imdbRating": 7.6,
+      "id": 13
+    },
+    {
+      "title": "Cazafantasmas: Más allá",
+      "poster": "https://www.themoviedb.org/t/p/w1280/txLpPPFbPD1ZeWxIFWFtSlPYA9m.jpg",
+      "genre": [
+        "Comedy",
+        "Action"
+      ],
+      "actors": [
+        2,
+        4,
+        7
+      ],
+      "year": 2021,
+      "duration": 120,
+      "imdbRating": 7.6,
+      "id": 14
+    },
+    {
+      "title": "Matrix Resurrections",
+      "poster": "https://www.themoviedb.org/t/p/w1280/dLIwpCTf4QoW01pp85KP9jcfTpu.jpg",
+      "genre": [
+        "Action",
+        "Adventure",
+        "Sci-Fi"
+      ],
+      "actors": [
+        2,
+        4,
+        6
+      ],
+      "year": 2021,
+      "duration": 148,
+      "imdbRating": 6.8,
+      "id": 15
+    },
+    {
+      "title": "Tom y Jerry: ¡Arriba, vaquero!",
+      "poster": "https://www.themoviedb.org/t/p/w1280/muIaHotSaSUQr0KZCIJOYQEe7y2.jpg",
+      "genre": [
+        "Animation",
+        "Comedy",
+        "Family",
+        "Western"
+      ],
+      "actors": [
+        1,
+        3,
+        4,
+        5
+      ],
+      "year": 2022,
+      "duration": 75,
+      "imdbRating": 7.1,
+      "id": 16
     }
   ],
   "actors": [
@@ -357,7 +431,10 @@
       "rating": 4.32,
       "movies": [
         10,
-        12
+        12,
+        1,
+        13,
+        16
       ]
     },
     {
@@ -370,7 +447,7 @@
       "movies": [
         3,
         4,
-        1
+        15
       ]
     },
     {
@@ -407,7 +484,8 @@
       "rating": 1.77,
       "movies": [
         11,
-        2
+        2,
+        14
       ]
     }
   ]

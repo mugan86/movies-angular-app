@@ -3,6 +3,7 @@
     <h5 class="card-title">{{ info.title }}</h5>
     <img
       [src]="info.img"
+      loading="lazy"
       class="cover"
       [alt]="info.title"
       onerror="this.src='/assets/img/default.webp'"

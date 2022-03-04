@@ -46,7 +46,9 @@ export class MoviesService {
       switchMap((movie: IMovie) => {
         return forkJoin([
           of(movie),
-          ...movie.actors.map((item) => this.actorsService.item(item)),
+          ...movie.actors.map((item) => this.actorsService.item(item).pipe((
+            catchError(()=> of(EMPTY))
+          ))),
           this.companiesService.list(),
         ]).pipe(
           map((data: any[]) => {

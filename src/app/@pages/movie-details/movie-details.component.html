@@ -4,6 +4,7 @@
     <div class="col-md-3">
       <img
         class="img-fluid"
+        loading="lazy"
         [ngClass]="{ cover: screen.width <= 460 }"
         [src]="movie?.poster"
         [alt]="movie?.title"
@@ -26,7 +27,7 @@
         <div class="col-lg">
           <h3>{{ "details.actors" | translate }}</h3>
           <hr />
-          <p *ngFor="let actor of movie?.actors">
+          <p *ngFor="let actor of movie?.actors; trackBy: trackByElement">
             {{ actor.first_name }} {{ actor.last_name }}
           </p>
         </div>
@@ -44,10 +45,15 @@
         <div class="col-lg">
           <h3>{{ "details.genres" | translate }}</h3>
           <hr />
-          <app-hashtag
-            [hashtag]="hashtag"
-            *ngFor="let hashtag of movie?.genre; trackBy: trackByElement"
-          ></app-hashtag>
+          <p *ngIf="movie?.genre?.length === 0; else genres">
+            {{ 'details.genresNotFound' | translate}}
+          </p>
+          <ng-template #genres>
+            <app-hashtag
+              [hashtag]="hashtag"
+              *ngFor="let hashtag of movie?.genre; trackBy: trackByElement"
+            ></app-hashtag>
+          </ng-template>
         </div>
       </div>
     </div>

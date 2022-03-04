@@ -15,8 +15,9 @@ import { CustomTranslateLoader } from '@core/helpers/i18n';
 import { FEATURE_DIRECTORIES_I18N } from '@core/constants/i18n';
 
 const createTranslateLoader = (http: HttpClient) => {
-  return new CustomTranslateLoader(http, FEATURE_DIRECTORIES_I18N.app)
-}
+  return new CustomTranslateLoader(http, FEATURE_DIRECTORIES_I18N.app);
+};
+
 @NgModule({
   declarations: [AppComponent],
   imports: [

@@ -2,7 +2,7 @@ import { Validators } from '@angular/forms';
 import { URL_VALIDATION_REGEX } from '@core/constants/regex';
 
 export const configcreateMovieForm = (initForm: any = []) => {
-  if (initForm.length === 0) {
+  if (initForm.length === 0) { // Creación de nuevo elemento con ajuste predefinidos
     initForm = ['', '', '', null, [], new Date().getFullYear(), 120, 5];
   }
   return {

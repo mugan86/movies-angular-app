@@ -1,36 +1,37 @@
 <aside
-  class="offcanvas offcanvas-start"
+  class="sidebar offcanvas offcanvas-start"
   [ngClass]="screen.width > 460 ? 'w-25' : 'w-75'"
   tabindex="-1"
   id="offcanvas"
   data-bs-keyboard="false"
   data-bs-backdrop="false"
 >
-  <div class="offcanvas-header" [ngStyle]="{ border: '1px solid red;' }">
+  <div class="sidebar-header offcanvas-header" [ngStyle]="{ border: '1px solid red;' }">
     <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
     <button
       type="button"
-      class="btn-close text-reset float-end"
+      class="sidebar-header__button btn-close text-reset float-end"
       data-bs-dismiss="offcanvas"
       aria-label="Close"
     ></button>
   </div>
-  <div class="offcanvas-body px-0">
+  <div class="sidebar-body offcanvas-body px-0">
     <ul
-      class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start"
+      class="sidebar-body-nav nav nav-pills flex-column mb-sm-auto mb-0 align-items-start"
       id="menu"
     >
       <li
-        class="nav-item"
+        class="sidebar-body-nav__link nav-item w-100"
         *ngFor="let item of principalMenu; trackBy: trackById"
       >
         <a
-          class="p-3 nav-link"
+          class="sidebar-body-nav__link__text p-3 nav-link"
           data-bs-dismiss="offcanvas"
           (click)="navigateTo(item.url)"
           >{{ item.label | translate }}</a
         >
       </li>
     </ul>
+    <hr>
   </div>
 </aside>
