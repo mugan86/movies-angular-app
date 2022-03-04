@@ -4,7 +4,7 @@ En este directorio principal se van a guardar todos los ficheros de extensión J
 
 ...Por el momento está configurado de tal manera para que solo cargue el español, pero si en el futuro quisieramos habilitar más idiomas como el Inglés, Euskera, Italiano,... tendríamos que realizar los siguientes pasos.
 
-## 1.- Crear un servicio para gestionar el estado del idioma / selección del idioma
+## 1.- Selección del idioma
 
 Creamos un servicio
 ```ng g s @core/services/i18n```
@@ -15,7 +15,7 @@ En el constructor añadimos el servicio
 
 ## 2.- El idioma que vamos a usar
 
-Tendremos que implementar lo siguiente en el constructor
+Tendremos que implementar lo siguiente en el constructor del componente donde usaremos el idioma
 ```this.translate.use(<código_idioma>);```
 Al querer especificar el Español (es), lo haremos así:
 ```this.translate.use('es');```
@@ -39,6 +39,51 @@ Para añadir más idiomas, tendremos que hacer lo siguiente. Por ejemplo, si que
 ...Para asignar correctamente el código, seguimos [este enlace](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) para coger el código (**ISO 639-1**) acorde al idioma seleccionado.
 
 ## 5.- Adaptar para seleccionar idiomas desde la app
+
+Ahora que ya tenemos más de un idioma tenemos que gestionar la selección del idioma. ...
+Para poder llevar a cabo lo siguiente, usaremos un nuevo servicio que crearemos para poder gestionar de una manera más sencilla el proceso de la información en el idioma seleccionado. ...
+
+Creamos un servicio
+```ng g s @core/services/i18n```
+
+Ahora tenemos el servicio i18n.service.ts donde inyectaremos el TranslateService para poder realizar la carga del idioma seleccionado, cambio de idioma y otras implementaciones futuras que queramos añadir.
+
+```
+import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+@Injectable()
+export class I18nService {
+
+  constructor(private translate: TranslateService) { 
+    this.translate.use('es')
+  }
+
+}
+
+```
+
+Ahora que tenemos lo básico, vamos a añadir la función para cambiar de idioma:
+```
+import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+@Injectable()
+export class I18nService {
+
+  constructor(private translate: TranslateService) { 
+    this.selectLanguage('es')
+  }
+
+  selectLanguage(language: string) {
+      this.translate.use(language);
+  }
+
+}
+```
+
+Con esto ya tendremos opción a cambiar de idioma desde cualquier parte de la app y si queremos podríamos guardar es código del idioma en localStorage para poder usarlo. Así podríamos implementar más idiomas fácilmente en nuestro proyecto. 
+
 
 
 
