@@ -26,7 +26,7 @@
         <div class="col-lg">
           <h3>{{ "details.actors" | translate }}</h3>
           <hr />
-          <p *ngFor="let actor of movie?.actors">
+          <p *ngFor="let actor of movie?.actors; trackBy: trackByElement">
             {{ actor.first_name }} {{ actor.last_name }}
           </p>
         </div>

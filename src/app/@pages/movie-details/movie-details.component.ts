@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { TypeAlertEnum } from '@core/constants/alerts';
 import { IScreen } from '@core/interfaces/screen.interface';
+import { IActor } from '@pages/actors/actor.interface';
 
 @Component({
   selector: 'app-movie-details',
@@ -78,8 +79,6 @@ export class MovieDetailsComponent implements OnDestroy {
       });
   }
 
-  trackByElement = (__: number, elementString: any): string => elementString;
-
   async deleteItem() {
     await this.alertService
       .dialogConfirmCancel(
@@ -121,12 +120,14 @@ export class MovieDetailsComponent implements OnDestroy {
   }
 
   navigateTo = (url: string) => {
-    this.router.navigateByUrl(url);
+    this.navigationService.goTo(url);
   };
 
   async updateItem() {
     this.navigationService.goTo(`/movies/edit/${this.movie?.id}`);
   }
+
+  trackByElement = (__: number, elementString: any): string => elementString;
 
   ngOnDestroy(): void {
     this.titleService.change('');

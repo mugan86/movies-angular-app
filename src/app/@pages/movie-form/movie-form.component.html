@@ -81,7 +81,7 @@
 
     <div id="hashtags">
       <app-select-value (labelRemove)="removeGenre($event)"
-        *ngFor="let genre of genresSelect"
+        *ngFor="let genre of genresSelect trackBy: trackByElement"
         [label]="genre"
       ></app-select-value>
     </div>

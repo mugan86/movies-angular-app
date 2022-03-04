@@ -161,7 +161,6 @@ export class MovieFormComponent implements OnDestroy {
     }
     this.createForm = this.formBuilder.group(configcreateMovieForm());
     this.genresSelect.length = 0;
-    // this.actorsList.length = 0;
     this.selectedActors.length = 0;
   }
 
@@ -210,6 +209,8 @@ export class MovieFormComponent implements OnDestroy {
         );
       });
   }
+
+  trackByElement = (__: number, elementString: any): string => elementString;
 
   ngOnDestroy(): void {
     this.titleService.change('');
