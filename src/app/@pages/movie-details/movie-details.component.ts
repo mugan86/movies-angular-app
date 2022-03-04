@@ -36,7 +36,7 @@ export class MovieDetailsComponent implements OnDestroy {
     private navigationService: NavigationService,
     private screenService: ScreenService
   ) {
-    this.translate.setDefaultLang('es');
+    this.translate.use('es');
     this.titleService.change('');
     this.route.paramMap
       .pipe(takeUntil(this.unsubscribe$))

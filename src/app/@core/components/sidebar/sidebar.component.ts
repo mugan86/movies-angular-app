@@ -23,10 +23,10 @@ export class SidebarComponent implements OnInit {
   constructor(
     private sidebarService: SidebarService,
     private router: Router,
-    private readonly translate: TranslateService,
+    private translate: TranslateService,
     private screenService: ScreenService
   ) {
-    this.translate.setDefaultLang('es');
+    this.translate.use('es');
 
     this.screenService.screen$.subscribe((screen: IScreen) => {
       this.screen = screen;

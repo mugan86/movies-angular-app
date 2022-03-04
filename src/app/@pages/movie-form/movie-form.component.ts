@@ -47,7 +47,7 @@ export class MovieFormComponent implements OnDestroy {
         this.actorsList = data.actor;
         this.companiesList = data.companies;
       });
-    this.translate.setDefaultLang('es');
+    this.translate.use('es');
 
     this.navigationService.isDetailsOrFormPage(true);
 

@@ -1,19 +1,24 @@
 {
-    "navbarSidebar": {
-      "actors": "Actores",
-      "companies": "Compañías",
-      "movies": "Películas",
-      "moviesAdd": "Crear película"
-    },
-    "alerts": {
-      "deleteTitle": "¿Estás listo para eliminar?",
-      "deleteContent": "Esta acción eliminará definitivamente el elemento seleccionado",
-      "confirm": "Si, estoy listo",
-      "cancel": "No, quizás más tarde",
-      "communicationOffTitle": "No hay conexión",
-      "communicationOffDescription": "No se ha podido conectar. Inténtelo de nuevo y si el problema persiste comuniquelo a un responsable",
-      "infoNotFound": "No existe",
-      "infoNotFoundDescription": "No hemos podido obtener la información requerida. Inténtelo de nuevo y si el problema persiste comuniquelo a un responsable"
-    }
+  "alerts": {
+    "cancel": "No, quizás más tarde",
+    "communicationOffTitle": "No hay conexión",
+    "communicationOffDescription": "No se ha podido conectar. Inténtelo de nuevo y si el problema persiste comuniquelo a un responsable",
+    "confirm": "Si, estoy listo",
+    "deleteTitle": "¿Estás listo para eliminar?",
+    "deleteContent": "Esta acción eliminará definitivamente el elemento seleccionado",
+    "infoNotFound": "No existe",
+    "infoNotFoundDescription": "No hemos podido obtener la información requerida. Inténtelo de nuevo y si el problema persiste comuniquelo a un responsable"
+  },
+  "languages": {
+    "basque": "Euskera",
+    "english": "Inglés",
+    "selectLabel": "Idioma",
+    "spanish": "Español"
+  },
+  "navbarSidebar": {
+    "actors": "Actores",
+    "companies": "Compañías",
+    "movies": "Películas",
+    "moviesAdd": "Crear película"
   }
-  
+}

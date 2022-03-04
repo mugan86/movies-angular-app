@@ -26,7 +26,7 @@ export class MoviesComponent implements OnDestroy {
     private alertService: AlertService
   ) {
     this.titleService.change(menuItems[0].label);
-    this.translate.setDefaultLang('es');
+    this.translate.use('es');
 
     this.moviesService
       .list()
