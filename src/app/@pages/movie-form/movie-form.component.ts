@@ -138,6 +138,11 @@ export class MovieFormComponent implements OnDestroy {
     }
   }
 
+  /**
+   * Vamos añadiendo la información en una ista para mostrarse debajo de la barra
+   * de introducir la información
+   * @param genre Elemento a añadir en lista de géneros 
+   */
   private addGenresList(genre: string) {
     if (
       !this.genresSelect
@@ -148,9 +153,12 @@ export class MovieFormComponent implements OnDestroy {
     }
     // Aqui voy a guardar el valor en lo seleccionado
     this.createForm.controls['genre'].reset();
-    console.log(this.createForm.value);
   }
 
+  /**
+   * Eliminaremos las etiquetas que se van creando debajndo del input de los géneros
+   * @param removeItem elemento a borrar de las etiquetas
+   */
   removeGenre (removeItem: string) {
     this.genresSelect = [...this.genresSelect.filter((genreItem) => genreItem != removeItem)]
   }
@@ -165,15 +173,15 @@ export class MovieFormComponent implements OnDestroy {
   }
 
   onSubmit() {
-    console.log(this.createForm.value);
     this.submitted = true;
 
-    // stop here if form is invalid
+    // No sigue si es inválido
     if (this.createForm.invalid) {
+      // Mostrar alerta.
       return;
     }
 
-    // display form values on success
+    // FOrmulario OK
     const movieData: IMovie = this.createForm.value;
     const company = movieData.company;
     delete movieData['company'];

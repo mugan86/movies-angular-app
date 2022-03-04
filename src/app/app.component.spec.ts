@@ -20,10 +20,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'movies_app'`, () => {
+  it(`should have as selectedLanguage is 'es'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('movies_app');
+    expect(app.selectedLanguage).toEqual('es');
   });
 
   it('should render title', () => {

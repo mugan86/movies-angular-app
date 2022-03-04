@@ -9,7 +9,7 @@ import { CustomTranslateLoader } from '@core/helpers/i18n';
 import { FEATURE_DIRECTORIES_I18N } from '@core/constants/i18n';
 import { SimpleFormLoaderModule } from '@core/components';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { SelectValueModule } from '@shared/components/select-value/select-value.module';
+import { SelectValueModule } from '@shared/components';
 const createTranslateLoader = (http: HttpClient) => {
   return new CustomTranslateLoader(http, FEATURE_DIRECTORIES_I18N.moviesForm);
 };
@@ -30,7 +30,7 @@ const createTranslateLoader = (http: HttpClient) => {
       isolate: true,
     }),
     SimpleFormLoaderModule,
-    SelectValueModule
+    SelectValueModule,
   ],
 })
 export class MovieFormModule {}

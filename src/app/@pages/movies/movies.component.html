@@ -10,10 +10,7 @@
   <i class="fa-solid fa-plus"></i>
 </button>
 <div class="row" *ngIf="!loading">
-  <div
-    class="col-sm-4"
-    *ngFor="let movie of movies; trackBy: trackById"
-  >
+  <div class="col-sm-4" *ngFor="let movie of movies; trackBy: trackById">
     <app-basic-info-card
       [info]="{
         title: movie.title,
