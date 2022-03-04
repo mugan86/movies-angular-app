@@ -187,8 +187,7 @@ export class MovieFormComponent implements OnDestroy {
           console.log(data);
           this.resetForm();
           this.loading = false;
-          // Mostrar alerta para notificar que todo OK!
-          this.alertService.dialogConfirm('cccc', '333', TypeAlertEnum.SUCCESS);
+          this.alertService.dialogConfirm('alerts.createItemOKTitle', 'alerts.createItemOKDesc', TypeAlertEnum.SUCCESS);
         });
       return;
     }
@@ -203,8 +202,7 @@ export class MovieFormComponent implements OnDestroy {
         this.loading = false;
         // Mostrar alerta para notificar que todo OK!
         this.alertService.dialogConfirm(
-          'Actualizado',
-          '333',
+          'alerts.updateItemOKTitle', 'alerts.updateItemOKDesc',
           TypeAlertEnum.SUCCESS
         );
       });

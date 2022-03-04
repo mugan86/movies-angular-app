@@ -45,10 +45,15 @@
         <div class="col-lg">
           <h3>{{ "details.genres" | translate }}</h3>
           <hr />
-          <app-hashtag
-            [hashtag]="hashtag"
-            *ngFor="let hashtag of movie?.genre; trackBy: trackByElement"
-          ></app-hashtag>
+          <p *ngIf="movie?.genre?.length === 0; else genres">
+            {{ 'details.genresNotFound' | translate}}
+          </p>
+          <ng-template #genres>
+            <app-hashtag
+              [hashtag]="hashtag"
+              *ngFor="let hashtag of movie?.genre; trackBy: trackByElement"
+            ></app-hashtag>
+          </ng-template>
         </div>
       </div>
     </div>

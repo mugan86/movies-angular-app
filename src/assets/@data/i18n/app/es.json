@@ -7,7 +7,17 @@
     "deleteTitle": "¿Estás listo para eliminar?",
     "deleteContent": "Esta acción eliminará definitivamente el elemento seleccionado",
     "infoNotFound": "No existe",
-    "infoNotFoundDescription": "No hemos podido obtener la información requerida. Inténtelo de nuevo y si el problema persiste comuniquelo a un responsable"
+    "infoNotFoundDescription": "No hemos podido obtener la información requerida. Inténtelo de nuevo y si el problema persiste comuniquelo a un responsable",
+    "deleteItemOkTitle": "Eliminado",
+    "deleteItemNoTitle": "NO Eliminado",
+    "deleteItemCancelTitle": "Cancelado",
+    "deleteItemOkDesc": "Selección eliminada correctamente",
+    "deleteItemNoDesc": "Debido a un problema no se ha eliminado",
+    "deleteItemCancelDesc": "No se va a proceder a eliminar por descartarlo",
+    "createItemOKTitle": "Elemento añadido",
+    "createItemOKDesc": "Elemento añadido correctamente en la base de datos",
+    "updateItemOKTitle": "Elemento actualizado",
+    "updateItemOKDesc": "Elemento actualizado correctamente en la base de datos"
   },
   "languages": {
     "basque": "Euskera",

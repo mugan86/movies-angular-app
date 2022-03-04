@@ -4,13 +4,12 @@ import { Component, OnDestroy } from '@angular/core';
 import { TitleService, NavigationService, ScreenService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { MoviesService } from '@pages/movies/movies.service';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { TypeAlertEnum } from '@core/constants/alerts';
 import { IScreen } from '@core/interfaces/screen.interface';
-import { IActor } from '@pages/actors/actor.interface';
 
 @Component({
   selector: 'app-movie-details',
@@ -32,7 +31,6 @@ export class MovieDetailsComponent implements OnDestroy {
     private moviesService: MoviesService,
     private route: ActivatedRoute,
     private alertService: AlertService,
-    private router: Router,
     private navigationService: NavigationService,
     private screenService: ScreenService
   ) {
@@ -96,23 +94,23 @@ export class MovieDetailsComponent implements OnDestroy {
               if (data.status) {
                 this.alertService
                   .dialogConfirm(
-                    'Eliminado',
-                    'Selección eliminada correctamente',
+                    'alerts.deleteItemOkTitle',
+                    'alerts.deleteItemOkDesc',
                     TypeAlertEnum.SUCCESS
                   )
                   .then(() => this.navigateTo('/movies'));
               } else {
                 this.alertService.dialogConfirm(
-                  'No eliminado',
-                  'Debido a un problema no se ha eliminado',
+                  'alerts.deleteItemNoTitle',
+                  'alerts.deleteItemNoDesc',
                   TypeAlertEnum.WARNING
                 );
               }
             });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           this.alertService.dialogConfirm(
-            'Cancelled',
-            'Your imaginary file is safe :)',
+            'alerts.deleteItemCancelTitle',
+            'alerts.deleteItemCancelDesc',
             TypeAlertEnum.ERROR
           );
         }

@@ -3,6 +3,7 @@
     "actors": "Actores",
     "company": "Estudio",
     "genres": "Géneros",
+    "genresNotFound": "Esta película no tiene géneros almacenados",
     "rating": "Puntuación",
     "time": "Duración"
   }
