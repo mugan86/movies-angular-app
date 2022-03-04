@@ -177,7 +177,7 @@ export class MovieFormComponent implements OnDestroy {
 
     // No sigue si es inválido
     if (this.createForm.invalid) {
-      // Mostrar alerta.
+      this.createForm.markAllAsTouched();
       return;
     }
 
