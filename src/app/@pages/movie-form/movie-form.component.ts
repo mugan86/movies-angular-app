@@ -62,7 +62,6 @@ export class MovieFormComponent implements OnDestroy {
             .subscribe(async (result) => {
               if (result.status) {
                 this.movie = result.movie;
-                console.log(this.movie);
                 // Aquí para la edición tendré que añadir de coger el objeto seleccionado
                 this.genresSelect = this.movie?.genre || [];
                 this.createForm = this.formBuilder.group(
@@ -74,7 +73,7 @@ export class MovieFormComponent implements OnDestroy {
                       id: this.movie?.company!.id,
                       label: this.movie?.company!.name,
                     },
-                    this.movie?.actors.map((actor) => actor.id),
+                    this.movie?.actors!.map((actor) => actor.id),
                     this.movie?.year,
                     this.movie?.duration,
                     this.movie?.imdbRating,
