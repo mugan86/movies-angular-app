@@ -1,23 +1,18 @@
-import { MoviesComponent } from './movies.component';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { async, TestBed, waitForAsync } from '@angular/core/testing';
-import { throwError } from 'rxjs/internal/observable/throwError';
+import { TestBed } from '@angular/core/testing';
 
 import { MoviesService } from './movies.service';
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
 
 describe('MoviesService', () => {
   let service: MoviesService;
   let httpMock: HttpTestingController;
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [MoviesService],
+      providers: [MoviesService]
     });
     service = TestBed.inject(MoviesService);
     httpMock = TestBed.inject(HttpTestingController);
