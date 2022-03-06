@@ -34,19 +34,20 @@
       "id": 2
     },
     {
-      "id": 3,
       "title": "Black Rain (Kuroi ame)",
       "poster": "http://dummyimage.com/400x600.png/5fa2dd/ffffff",
       "genre": [
         "Drama",
-        "War"
+        "War",
+        "terror"
+      ],
+      "actors": [
+        1
       ],
       "year": 2010,
       "duration": 175,
       "imdbRating": 6.25,
-      "actors": [
-        1
-      ]
+      "id": 3
     },
     {
       "id": 4,

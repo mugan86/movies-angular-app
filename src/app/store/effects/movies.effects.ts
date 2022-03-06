@@ -13,7 +13,7 @@ export class MoviesEffects {
     private moviesService: MoviesService
   ) {}
 
-  loadMovie$ = createEffect(() =>
+  loadMovies$ = createEffect(() =>
     this.actions$.pipe(
       ofType(moviesActions.GetMoviesLoad),
       mergeMap(() =>
@@ -30,4 +30,5 @@ export class MoviesEffects {
       )
     )
   );
+  
 }

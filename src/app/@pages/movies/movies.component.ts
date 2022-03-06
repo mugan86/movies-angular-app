@@ -23,7 +23,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
   constructor(
     private titleService: TitleService,
     private translate: TranslateService,
-    private moviesService: MoviesService,
     private navigationService: NavigationService,
     private router: Router,
     private alertService: AlertService,
@@ -36,7 +35,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store
-      .select('movies')
+      .select('moviesList')
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ movies, loading, status, error }) => {
         console.log(movies, status, error, loading);
