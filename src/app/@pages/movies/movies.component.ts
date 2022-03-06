@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TitleService, NavigationService } from '@core/services';
 import menuItems from '@data/menus/principal.json';
 import { IMovie } from './movie.interface';
@@ -13,7 +13,7 @@ import { TypeAlertEnum } from '@core/constants/alerts';
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.css'],
 })
-export class MoviesComponent implements OnDestroy {
+export class MoviesComponent implements OnInit, OnDestroy {
   private readonly unsubscribe$ = new Subject();
   movies: IMovie[] = [];
   loading: boolean = true;
@@ -28,6 +28,12 @@ export class MoviesComponent implements OnDestroy {
     this.titleService.change(menuItems[0].label);
     this.translate.use('es');
 
+    
+
+    this.navigationService.isDetailsOrFormPage(false);
+  }
+
+  ngOnInit() {
     this.moviesService
       .list()
       .pipe(takeUntil(this.unsubscribe$))
@@ -44,8 +50,6 @@ export class MoviesComponent implements OnDestroy {
           );
         }
       });
-
-    this.navigationService.isDetailsOrFormPage(false);
   }
 
   trackById = (__: number, movie: any): string => movie.id;
