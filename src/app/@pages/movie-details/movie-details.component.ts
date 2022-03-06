@@ -1,6 +1,7 @@
+import { GetMovieLoad } from './../../store/actions/movie.actions';
 import { AlertService } from '@shared/services/alert.service';
 import { IMovie } from '@pages/movies/movie.interface';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TitleService, NavigationService, ScreenService } from '@core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { MoviesService } from '@pages/movies/movies.service';
@@ -10,13 +11,15 @@ import { takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { TypeAlertEnum } from '@core/constants/alerts';
 import { IScreen } from '@core/interfaces/screen.interface';
+import { Store } from '@ngrx/store';
+import { AppState } from '@app/store/app.reducers';
 
 @Component({
   selector: 'app-movie-details',
   templateUrl: './movie-details.component.html',
   styleUrls: ['./movie-details.component.css'],
 })
-export class MovieDetailsComponent implements OnDestroy {
+export class MovieDetailsComponent implements OnInit, OnDestroy {
   private readonly unsubscribe$ = new Subject();
   id: string = '';
   movie?: IMovie;
@@ -32,41 +35,15 @@ export class MovieDetailsComponent implements OnDestroy {
     private route: ActivatedRoute,
     private alertService: AlertService,
     private navigationService: NavigationService,
-    private screenService: ScreenService
+    private screenService: ScreenService,
+    private store: Store<AppState>
   ) {
     this.translate.use('es');
     this.titleService.change('');
     this.route.paramMap
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((params: ParamMap) => {
-        this.moviesService
-          .get(Number(params.get('id')))
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe((result) => {
-            if (result.status) {
-              this.movie = result.movie;
-              this.titleService.change(result.movie!.title);
-              this.loading = false;
-            } else if (!result.status) {
-              if (result.message.status === 404) {
-                this.alertService
-                  .dialogConfirm(
-                    'alerts.infoNotFound',
-                    'alerts.infoNotFoundDescription',
-                    TypeAlertEnum.ERROR
-                  )
-                  .then(() => {
-                    this.navigateTo('');
-                  });
-                return;
-              }
-              this.alertService.dialogConfirm(
-                'alerts.communicationOffTitle',
-                'alerts.communicationOffDescription',
-                TypeAlertEnum.ERROR
-              );
-            }
-          });
+        this.store.dispatch(GetMovieLoad({ id: Number(params.get('id')) }));
       });
 
     this.navigationService.isDetailsOrFormPage(true);
@@ -74,6 +51,25 @@ export class MovieDetailsComponent implements OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((screen: IScreen) => {
         this.screen = screen;
+      });
+  }
+
+  ngOnInit() {
+    this.store
+      .select('movieDetails')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({ movie, loading, status }) => {
+        this.loading = loading;
+        if (status) {
+          this.movie = movie;
+        } else if (!status && !loading) {
+          this.movie = undefined;
+          this.alertService.dialogConfirm(
+            'alerts.communicationOffTitle',
+            'alerts.communicationOffDescription',
+            TypeAlertEnum.ERROR
+          );
+        }
       });
   }
 

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs';
 
-import { createTranslateLoader } from './../../app.module';
+import { createTranslateLoader } from '@app/app.module';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
@@ -14,12 +14,22 @@ import { IMovie } from './movie.interface';
 import { MoviesService } from './movies.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
+import { EffectsArray } from '@app/store/effects';
+import { EffectsModule } from '@ngrx/effects';
+import { appReducers } from '@app/store/app.reducers';
+import { StoreModule } from '@ngrx/store';
 
 class MockRouter {
   navigateByUrl(url: string) {
     return url;
   }
 }
+
+/*class StoreMock { 
+  // How we did it before
+  select =  jasmine.createSpy().and.returnValue(of(quote)); 
+  dispatch = jasmine.createSpy();
+}*/
 
 describe('MoviesComponent', () => {
   let component: MoviesComponent;
@@ -41,6 +51,8 @@ describe('MoviesComponent', () => {
         }),
         ContentItemsLoaderModule,
         BasicInfoCardModule,
+        StoreModule.forRoot(appReducers),
+        EffectsModule.forRoot(EffectsArray),
       ],
       providers: [MoviesService, { provide: Router, useClass: MockRouter }],
     }).compileComponents();
@@ -129,7 +141,7 @@ describe('MoviesComponent', () => {
 
     expect(component.movies.length).toEqual(0);
     expect(component.movies).toEqual([]);
-    expect(component.loading).toEqual(true);
+    expect(component.loading).toEqual(false);
   });
 
   it('Comprobar el icono del botón de añadir es el correcto', () => {
