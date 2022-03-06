@@ -57,6 +57,32 @@ describe("Lista de películas", () => {
 
   });
 
+  it("Comprobar características del menú hamburguesa del navbar", () => {
+    cy.get(".navbar-brand button").invoke("css", "cursor").should("equal", "pointer");
+    cy.get(".navbar-brand button i").should('have.attr', 'class').should('include', "fa-solid fa-bars");
+  });
+
+  it("Comprobar características del navbar", () => {
+    cy.get(".navbar span").contains('Películas');
+    cy.get(".navbar").invoke('css', 'color').should('equal', "rgb(33, 37, 41)");
+    cy.get(".navbar").invoke('css', 'background-color').should('equal', "rgb(248, 249, 250)");
+  });
+
+  it("Comprobar características del botón para añadir películas", () => {
+    cy.get(".movie__button-new i").should('have.attr', 'class').should('include', "fa-solid fa-plus");
+    cy.get(".movie__button-new").invoke("css", "cursor").should("equal", "pointer");
+    cy.get(".movie__button-new").invoke('css', 'color').should('equal', "rgb(0, 0, 0)");
+    cy.get(".movie__button-new").invoke('css', 'background-color').should('equal', "rgb(255, 193, 7)");
+    cy.get(".movie__button-new").invoke('css', 'border-color').should('equal', "rgb(255, 193, 7)");
+  });
+
+  it("Navegar al formulario de crear una película", () => {
+    cy.get(".movie__button-new").click();
+    // cy.get("h1").contains("Madrid");
+    cy.url().should('equal', 'http://localhost:4200/#/movies/add');
+    console.log(cy.url())
+  });
+
   /*it("Check Country element take correct base styles", () => {
     cy.get("li").invoke("css", "cursor").should("equal", "pointer");
     cy.get("li").invoke("css", "width").should("equal", "300px");
