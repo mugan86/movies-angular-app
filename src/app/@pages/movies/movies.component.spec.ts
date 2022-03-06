@@ -4,15 +4,10 @@ import { of } from 'rxjs';
 import { createTranslateLoader } from './../../app.module';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-  ComponentFixture,
-  inject,
-  TestBed
-} from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 import { MoviesComponent } from './movies.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ContentItemsLoaderModule } from '@core/components';
 import { BasicInfoCardModule } from '@shared/components';
 import { IMovie } from './movie.interface';
@@ -21,14 +16,16 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 
 class MockRouter {
-  navigateByUrl(url: string) { return url; }
+  navigateByUrl(url: string) {
+    return url;
+  }
 }
 
 describe('MoviesComponent', () => {
   let component: MoviesComponent;
   let fixture: ComponentFixture<MoviesComponent>;
   let moviesService: MoviesService;
- 
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       schemas: [NO_ERRORS_SCHEMA],
@@ -45,17 +42,14 @@ describe('MoviesComponent', () => {
         ContentItemsLoaderModule,
         BasicInfoCardModule,
       ],
-      providers: [
-        MoviesService,
-        { provide: Router, useClass: MockRouter },
-      ],
+      providers: [MoviesService, { provide: Router, useClass: MockRouter }],
     }).compileComponents();
   });
   beforeEach(inject([MoviesService], (movServ: MoviesService) => {
     moviesService = movServ;
     fixture = TestBed.createComponent(MoviesComponent);
     component = fixture.componentInstance;
-    
+
     fixture.detectChanges();
   }));
 
@@ -155,19 +149,22 @@ describe('MoviesComponent', () => {
       document.querySelector('.movie__button-new')
     );
     buttonElement.click();
-    
+
     expect(component.add).toHaveBeenCalled();
     buttonElement.click();
     expect(component.add).toHaveBeenCalledTimes(2);
   });
 
-  it('Llamar a Router.navigateByUrl("/movies/add") con la llamada a "add()"', inject([Router], (router: Router) => {
-    const spy = spyOn(router, 'navigateByUrl');
+  it('Llamar a Router.navigateByUrl("/movies/add") con la llamada a "add()"', inject(
+    [Router],
+    (router: Router) => {
+      const spy = spyOn(router, 'navigateByUrl');
 
-    component.add();
+      component.add();
 
-    const url = spy.calls.first().args[0];
+      const url = spy.calls.first().args[0];
 
-    expect(url).toBe('/movies/add');
-}));
+      expect(url).toBe('/movies/add');
+    }
+  ));
 });
