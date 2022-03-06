@@ -35,27 +35,13 @@ export class MoviesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.moviesService
-      .list()
+    this.store
+      .select('movies')
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((result) => {
-        console.log(result);
-        if (result.status) {
-          this.movies = result.movies;
-          this.loading = false;
-        } else if (!result.status) {
-          this.alertService.dialogConfirm(
-            'alerts.communicationOffTitle',
-            'alerts.communicationOffDescription',
-            TypeAlertEnum.ERROR
-          );
-        }
-      });
-
-      this.store.select('movies').subscribe( ({ movies, loading, status, error }) => {
-        console.log(movies, status, error, loading)
+      .subscribe(({ movies, loading, status, error }) => {
+        console.log(movies, status, error, loading);
         this.movies = movies;
-        this.loading  = loading;
+        this.loading = loading;
         if (status) {
           this.movies = movies;
         } else if (!status && !loading) {
@@ -67,9 +53,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
           );
         }
       });
-  
-  
-      this.store.dispatch( GetMoviesLoad() );
+
+    this.store.dispatch(GetMoviesLoad());
   }
 
   trackById = (__: number, movie: any): string => movie.id;
