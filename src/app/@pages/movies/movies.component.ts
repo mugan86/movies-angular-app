@@ -8,6 +8,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { AlertService } from '@shared/services/alert.service';
 import { TypeAlertEnum } from '@core/constants/alerts';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store/app.reducers';
+import { GetMoviesLoad } from 'src/app/store/actions';
 @Component({
   selector: 'app-movies',
   templateUrl: './movies.component.html',
@@ -23,13 +26,11 @@ export class MoviesComponent implements OnInit, OnDestroy {
     private moviesService: MoviesService,
     private navigationService: NavigationService,
     private router: Router,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private store: Store<AppState>
   ) {
     this.titleService.change(menuItems[0].label);
     this.translate.use('es');
-
-    
-
     this.navigationService.isDetailsOrFormPage(false);
   }
 
@@ -50,6 +51,25 @@ export class MoviesComponent implements OnInit, OnDestroy {
           );
         }
       });
+
+      this.store.select('movies').subscribe( ({ movies, loading, status, error }) => {
+        console.log(movies, status, error, loading)
+        this.movies = movies;
+        this.loading  = loading;
+        if (status) {
+          this.movies = movies;
+        } else if (!status && !loading) {
+          this.movies = [];
+          this.alertService.dialogConfirm(
+            'alerts.communicationOffTitle',
+            'alerts.communicationOffDescription',
+            TypeAlertEnum.ERROR
+          );
+        }
+      });
+  
+  
+      this.store.dispatch( GetMoviesLoad() );
   }
 
   trackById = (__: number, movie: any): string => movie.id;

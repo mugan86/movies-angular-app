@@ -11,7 +11,7 @@ export interface MoviesState {
 
 export const moviesInitialState: MoviesState = {
   movies: [],
-  status: false,
+  status: true,
   loading: false,
   error: null,
 };
@@ -31,7 +31,7 @@ const _moviesReducer = createReducer(
 
   on(GetMoviesFail, (state, { payload }) => ({
     ...state,
-    loading: false,
+    loading: true,
     status: false,
     message: payload.message
   }))
