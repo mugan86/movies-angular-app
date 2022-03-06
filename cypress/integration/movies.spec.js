@@ -43,71 +43,115 @@ describe("Lista de películas", () => {
 
     // Imágenes
 
-    cy.get("app-basic-info-card").find('img').should('have.attr', 'src').should('include',staticResponse[0].poster)
-    cy.get("app-basic-info-card img").last().should('have.attr', 'src').should('include',staticResponse[staticResponse.length - 1].poster)
-    
+    cy.get("app-basic-info-card")
+      .find("img")
+      .should("have.attr", "src")
+      .should("include", staticResponse[0].poster);
+    cy.get("app-basic-info-card img")
+      .last()
+      .should("have.attr", "src")
+      .should("include", staticResponse[staticResponse.length - 1].poster);
+
+    // ===== CSS ======
+    cy.get(".cover").invoke("css", "object-fit").should("equal", "cover");
+    cy.get(".cover").invoke("css", "max-height").should("equal", "200px");
 
     // Hashtags
 
-    // card-text
-
-    cy.get("app-basic-info-card .card-text").first().should("have.text", '#comedy\n#action\n');
-    cy.get("app-basic-info-card .card-text").last().should("have.text", '#horror\n#thriller\n');
-
-
+    cy.get("app-basic-info-card .card-text")
+      .first()
+      .should("have.text", "#comedy\n#action\n");
+    cy.get("app-basic-info-card .card-text")
+      .last()
+      .should("have.text", "#horror\n#thriller\n");
+    cy.get("app-hashtag small")
+      .invoke("css", "color")
+      .should("equal", "rgb(108, 117, 125)");
   });
 
   it("Comprobar características del menú hamburguesa del navbar", () => {
-    cy.get(".navbar-brand button").invoke("css", "cursor").should("equal", "pointer");
-    cy.get(".navbar-brand button i").should('have.attr', 'class').should('include', "fa-solid fa-bars");
+    cy.get(".navbar-brand button")
+      .invoke("css", "cursor")
+      .should("equal", "pointer");
+    cy.get(".navbar-brand button i")
+      .should("have.attr", "class")
+      .should("include", "fa-solid fa-bars");
+  });
+
+  it("Abrir menú lateral (Sidebar) y ver las opciones y acciones", () => {
+    // Sidebar cerrado
+    cy.get(".sidebar").invoke("css", "visibility").should("equal", "hidden");
+
+    // Abrir Sidebar
+    cy.get(".navbar-brand button").click();
+
+    cy.wait(2500);
+
+    // Sidebar expandido con sus opciones
+    cy.get(".sidebar").invoke("css", "visibility").should("equal", "visible");
+
+    // Sidebar abierto - Título del menú
+    cy.get(".sidebar-header .offcanvas-title").contains("Menu");
+    // Sidebar Nav Links
+    cy.get(".sidebar-body-nav").children().should("have.length", 3);
+
+    // Sidebar Nav Links - Elementos y sus textos
+    cy.get(".sidebar-body-nav")
+      .children()
+      .first()
+      .should("have.text", "Películas")
+      .next()
+      .should("have.text", "Actores")
+      .next()
+      .should("have.text", "Compañías");
+
+    cy.get(".sidebar-header__button").click();
+    cy.wait(1000);
   });
 
   it("Comprobar características del navbar", () => {
-    cy.get(".navbar span").contains('Películas');
-    cy.get(".navbar").invoke('css', 'color').should('equal', "rgb(33, 37, 41)");
-    cy.get(".navbar").invoke('css', 'background-color').should('equal', "rgb(248, 249, 250)");
+    cy.get(".navbar span").contains("Películas");
+    cy.get(".navbar").invoke("css", "color").should("equal", "rgb(33, 37, 41)");
+    cy.get(".navbar")
+      .invoke("css", "background-color")
+      .should("equal", "rgb(248, 249, 250)");
   });
 
   it("Comprobar características del botón para añadir películas", () => {
-    cy.get(".movie__button-new i").should('have.attr', 'class').should('include', "fa-solid fa-plus");
-    cy.get(".movie__button-new").invoke("css", "cursor").should("equal", "pointer");
-    cy.get(".movie__button-new").invoke('css', 'color').should('equal', "rgb(0, 0, 0)");
-    cy.get(".movie__button-new").invoke('css', 'background-color').should('equal', "rgb(255, 193, 7)");
-    cy.get(".movie__button-new").invoke('css', 'border-color').should('equal', "rgb(255, 193, 7)");
+    cy.get(".movie__button-new i")
+      .should("have.attr", "class")
+      .should("include", "fa-solid fa-plus");
+    cy.get(".movie__button-new")
+      .invoke("css", "cursor")
+      .should("equal", "pointer");
+    cy.get(".movie__button-new")
+      .invoke("css", "color")
+      .should("equal", "rgb(0, 0, 0)");
+    cy.get(".movie__button-new")
+      .invoke("css", "background-color")
+      .should("equal", "rgb(255, 193, 7)");
+    cy.get(".movie__button-new")
+      .invoke("css", "border-color")
+      .should("equal", "rgb(255, 193, 7)");
   });
 
   it("Navegar al formulario de crear una película", () => {
     cy.get(".movie__button-new").click();
-    // cy.get("h1").contains("Madrid");
-    cy.url().should('equal', 'http://localhost:4200/#/movies/add');
-    console.log(cy.url())
+    
+    
+    cy.url().should("equal", "http://localhost:4200/#/movies/add");
+
+    // Volver a lista de películas
+    cy.visit("http://localhost:4200");
   });
 
-  /*it("Check Country element take correct base styles", () => {
-    cy.get("li").invoke("css", "cursor").should("equal", "pointer");
-    cy.get("li").invoke("css", "width").should("equal", "300px");
+  it("Navegar a detalles de una película", () => {
+    cy.get("app-basic-info-card").first().click();
+    
+    
+    cy.url().should("equal", "http://localhost:4200/#/movies/1");
+
+    // Volver a lista de películas
+    cy.visit("http://localhost:4200");
   });
-
-  it("should display city when clicking on country", () => {
-    cy.contains("Spain").click();
-    cy.get("h1").contains("Madrid");
-  });*/
-
-  /*it("Check City element take correct base styles", () => {
-      cy.contains("Spain").click();
-  
-      cy.get("h1").invoke("css", "position").should("equal", "fixed");
-  
-      cy.get("h1").invoke("css", "color").should("equal", "rgb(255, 255, 255)");
-  
-      cy.get("h1").invoke("css", "top").should("equal", "20px");
-  
-      cy.get("h1").invoke("css", "right").should("equal", "0px");
-  
-      cy.get("h1").invoke("css", "text-align").should("equal", "right");
-  
-      cy.get("h1")
-        .invoke("css", "background-color")
-        .should("equal", "rgba(133, 194, 10, 0.7)");
-    });*/
 });
