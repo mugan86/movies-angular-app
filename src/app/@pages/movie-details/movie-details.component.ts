@@ -62,6 +62,7 @@ export class MovieDetailsComponent implements OnInit, OnDestroy {
         this.loading = loading;
         if (status) {
           this.movie = movie;
+          this.titleService.change(this.movie!.title);
         } else if (!status && !loading) {
           this.movie = undefined;
           this.alertService.dialogConfirm(
