@@ -36,6 +36,8 @@ Con esto, ya tendremos lo necesario para trabajar en el proyecto y realizar las 
 * e2e con Cypress
 ```npm run e2e```
 
+Al iniciar el test e2e, **lo que he implementado en este proyecto es el fichero [movies.spec.js](https://github.com/mugan86/movies-angular-app/blob/master/cypress/integration/movies.spec.js)**
+
 ## Instrucciones para poder ampliar a más idiomas
 
 [En el siguiente enlace](https://github.com/mugan86/movies-angular-app/blob/master/src/assets/%40data/i18n/README.md) he dejado informción de como podemos ampliar a otros idiomas.
