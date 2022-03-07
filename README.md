@@ -36,6 +36,14 @@ Con esto, ya tendremos lo necesario para trabajar en el proyecto y realizar las 
 * e2e con Cypress
 ```npm run e2e```
 
+## Instrucciones para poder ampliar a más idiomas
+
+[En el siguiente enlace](https://github.com/mugan86/movies-angular-app/blob/master/src/assets/%40data/i18n/README.md) he dejado informción de como podemos ampliar a otros idiomas.
+
+## Gestión de las tareas asignadas
+
+Las tareas las he ido gestionando [en este panel](https://github.com/mugan86/movies-angular-app/projects/1)
+
 ## Contacto
 
 En el caso de necesitar algo, os podéis poner en contacto conmigo en **mugan86@gmail.com**
