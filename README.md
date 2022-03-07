@@ -1,27 +1,41 @@
-# MoviesApp
+# Aplicación de Películas con Angular 13
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.4.
+Proyecto para la realización de una app de películas en el que hay que crear un CRUD para gestionar la información de dicha base de datos.
 
-## Development server
+Este proyecto ha sido creado [Angular CLI](https://github.com/angular/angular-cli) version 13.2.4 y la versión utilizada de Node ha sido la 16.14.0.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Instrucciones de uso inicial
 
-## Code scaffolding
+Para poder utilizar este proyecto hay que seguir los siguientes pasos
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1.- Clonar el repositorio
 
-## Build
+```git clone git@github.com:mugan86/movies-angular-app.git```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+2.- Instalar las dependencias
 
-## Running unit tests
+```npm install```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+3.- Poner en marcha la API
 
-## Running end-to-end tests
+```npm run server```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+4.- Iniciar la aplicación en otra instancia
 
-## Further help
+```npm start```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Con esto, ya tendremos lo necesario para trabajar en el proyecto y realizar las diferentes operaciones que contiene para gestionar la información de la API navegaremos a  `http://localhost:4200/`.
+
+## Testing
+
+* Unit Testing
+```npm test```
+* Coverage del Unit Testing con su informe
+```npm run test:coverage```
+
+* e2e con Cypress
+```npm run e2e```
+
+## Contacto
+
+En el caso de necesitar algo, os podéis poner en contacto conmigo en **mugan86@gmail.com**
